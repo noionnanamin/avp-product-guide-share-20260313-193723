@@ -984,6 +984,22 @@
       width: 100%;
       height: auto;
     }
+    .regulation-image-wrap {
+      margin-top: 10px;
+      border: 1px solid rgba(83, 120, 170, 0.22);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      display: none;
+    }
+    .regulation-image-wrap.active {
+      display: block;
+    }
+    .regulation-image-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
 
     @media (max-width: 1279px) {
       .edit-advanced-grid {
@@ -1357,6 +1373,9 @@
 
           <article id="regulationPanel" class="card panel full">
             <h3>配信規定</h3>
+            <div class="regulation-image-wrap" id="regulationImageWrap">
+              <img id="regulationImage" src="./assets/abema-regulation.png" alt="ABEMA 入稿規定" />
+            </div>
             <table class="table ratio-1-3">
               <colgroup>
                 <col />
@@ -1686,6 +1705,8 @@
     const detailChip = document.getElementById("detailChip");
     const specsBody = document.getElementById("specsBody");
     const regulationBody = document.getElementById("regulationBody");
+    const regulationImageWrap = document.getElementById("regulationImageWrap");
+    const regulationImage = document.getElementById("regulationImage");
     const adDetailSection = document.getElementById("adDetailSection");
     const adDetailPanel = document.getElementById("adDetailPanel");
     const kpiCards = document.querySelectorAll(".kpi-grid .kpi");
@@ -2112,6 +2133,10 @@
       ]
     };
 
+    const mediaRegulationImageByKey = {
+      ABEMA: { src: "./assets/abema-regulation.png", alt: "ABEMA 入稿規定" }
+    };
+
     let currentMedia = "ABEMA";
     let currentInventoryTab = "device";
     let currentAttrTab = "gender";
@@ -2328,6 +2353,14 @@
       regulationBody.innerHTML = buildRegulations(mediaKey, selectedMedia)
         .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`)
         .join("");
+      const regulationImageDef = mediaRegulationImageByKey[mediaKey];
+      if (regulationImageDef) {
+        regulationImage.src = regulationImageDef.src;
+        regulationImage.alt = regulationImageDef.alt;
+        regulationImageWrap.classList.add("active");
+      } else {
+        regulationImageWrap.classList.remove("active");
+      }
 
       renderInventory(currentInventoryTab);
       renderAttr(currentAttrTab);
