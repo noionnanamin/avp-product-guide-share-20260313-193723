@@ -717,6 +717,18 @@
       color: #5f7698;
       font-weight: 600;
     }
+    .table.ratio-1-3 {
+      table-layout: fixed;
+    }
+    .table.ratio-1-3 col:first-child {
+      width: 25%;
+    }
+    .table.ratio-1-3 col:last-child {
+      width: 75%;
+    }
+    .table.ratio-1-3 td {
+      word-break: break-word;
+    }
 
     .chips {
       display: flex;
@@ -1343,6 +1355,25 @@
             </table>
           </article>
 
+          <article id="regulationPanel" class="card panel full">
+            <h3>配信規定</h3>
+            <table class="table ratio-1-3">
+              <colgroup>
+                <col />
+                <col />
+              </colgroup>
+              <thead>
+                <tr><th>項目</th><th>内容</th></tr>
+              </thead>
+              <tbody id="regulationBody">
+                <tr><td>審査基準</td><td>各媒体の広告掲載基準に準拠し、表現内容・遷移先・クリエイティブ仕様を事前確認します。</td></tr>
+                <tr><td>配信面規定</td><td>配信面・ポジションは媒体ごとの仕様に準拠します。案件要件に応じて対象面を調整します。</td></tr>
+                <tr><td>秒数規定</td><td>入稿秒数は媒体ごとの許容秒数に準拠します。長尺や半端尺は媒体確認のうえで決定します。</td></tr>
+                <tr><td>運用備考</td><td>クリック・スキップ可否や計測定義など、媒体固有の運用条件は実施前に最終確定します。</td></tr>
+              </tbody>
+            </table>
+          </article>
+
           <article class="card panel full" id="adDetailPanel">
             <h3>広告仕様詳細</h3>
             <div class="ad-detail-wrap" id="adDetailSection">
@@ -1654,6 +1685,7 @@
     const detailDescription = document.getElementById("detailDescription");
     const detailChip = document.getElementById("detailChip");
     const specsBody = document.getElementById("specsBody");
+    const regulationBody = document.getElementById("regulationBody");
     const adDetailSection = document.getElementById("adDetailSection");
     const adDetailPanel = document.getElementById("adDetailPanel");
     const kpiCards = document.querySelectorAll(".kpi-grid .kpi");
@@ -1683,6 +1715,7 @@
     const inventoryPanel = document.getElementById("inventoryPanel");
     const attrPanel = document.getElementById("attrPanel");
     const specOverviewPanel = document.getElementById("specOverviewPanel");
+    const regulationPanel = document.getElementById("regulationPanel");
     const uiGenrePanel = document.getElementById("uiGenrePanel");
     const hotProgramWrap = document.getElementById("hotProgramWrap");
     const creativeDemoPanel = document.getElementById("creativeDemoPanel");
@@ -2028,6 +2061,57 @@
       }
     };
 
+    const mediaRegulationRowsByKey = {
+      ABEMA: [
+        ["掲載面規定", "リニア / VODの2面で配信。"],
+        ["クリック規定", "クリック不可。"],
+        ["スキップ規定", "VODのみ31秒以上のクリエイティブで6秒地点からスキップ可。"],
+        ["秒数・ポジション規定", "リニア: 15/30/60秒（Mid/Post）。VOD: Pre 6-15秒、Mid 6-60秒。"]
+      ],
+      TVer: [
+        ["掲載面規定", "リアルタイム配信 / キャッチアップ配信に対応。"],
+        ["クリック規定", "キー局+準キー局でクリック配信可（単価1.1倍）。"],
+        ["スキップ規定", "スキップ不可。"],
+        ["秒数・ポジション規定", "Pre/Mid/Postで6-180秒（局・ポジションごとに可否差分あり）。"]
+      ],
+      DAZN: [
+        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
+        ["クリック/スキップ規定", "LIVE/キャッチアップともにクリック不可・スキップ不可。"],
+        ["秒数規定", "LIVE: 15秒固定、キャッチアップ: 1-30秒（半端尺可）。"],
+        ["ポジション規定", "Preロール。"]
+      ],
+      SPOTV: [
+        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
+        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
+        ["秒数規定", "15秒のみ。"],
+        ["ポジション規定", "Preロール。"]
+      ],
+      Lemino: [
+        ["掲載面規定", "VOD（ハイライト / キャッチアップ / オリジナル）。"],
+        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
+        ["秒数規定", "Pre: 15/30秒、Mid: 15/30/60秒。"],
+        ["デバイス規定", "SP(TAB) / CTV。"]
+      ],
+      "Rチャンネル": [
+        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
+        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
+        ["秒数規定", "15/30/60/90/120秒（半端尺は都度相談）。"],
+        ["ポジション規定", "Midロール。"]
+      ],
+      JSPORTS: [
+        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
+        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
+        ["秒数規定", "15/30/60秒（長尺・半端尺は都度相談）。"],
+        ["ポジション規定", "Midロール。"]
+      ],
+      "ニコニコ動画": [
+        ["掲載面規定", "UGC動画インストリームビデオPMP。"],
+        ["クリック規定", "クリック可能。"],
+        ["スキップ規定", "1秒以上でスキップ可能。"],
+        ["秒数・ポジション規定", "6秒以上（制限なし）、Pre / Postに対応。"]
+      ]
+    };
+
     let currentMedia = "ABEMA";
     let currentInventoryTab = "device";
     let currentAttrTab = "gender";
@@ -2037,6 +2121,7 @@
       inventory: true,
       attr: true,
       specOverview: true,
+      regulation: true,
       adDetail: true,
       uiGenre: true,
       hotProgram: true,
@@ -2046,6 +2131,7 @@
       inventory: { label: "在庫構成比", getEl: () => inventoryPanel },
       attr: { label: "利用者属性", getEl: () => attrPanel },
       specOverview: { label: "広告仕様概要", getEl: () => specOverviewPanel },
+      regulation: { label: "配信規定", getEl: () => regulationPanel },
       adDetail: { label: "広告仕様詳細", getEl: () => adDetailPanel },
       uiGenre: { label: "画面UIとジャンル", getEl: () => uiGenrePanel },
       hotProgram: { label: "Hot Program", getEl: () => hotProgramWrap },
@@ -2065,6 +2151,12 @@
     function ensureSectionVisibility(mediaKey) {
       if (!mediaSectionVisibility[mediaKey]) {
         mediaSectionVisibility[mediaKey] = { ...defaultSectionVisibility };
+      } else {
+        // 既存状態に新規セクションキーが無い場合でも、デフォルト値を補完する
+        mediaSectionVisibility[mediaKey] = {
+          ...defaultSectionVisibility,
+          ...mediaSectionVisibility[mediaKey]
+        };
       }
       return mediaSectionVisibility[mediaKey];
     }
@@ -2089,11 +2181,32 @@
       setDisplayByFlag(inventoryPanel, vis.inventory);
       setDisplayByFlag(attrPanel, vis.attr);
       setDisplayByFlag(specOverviewPanel, vis.specOverview);
+      setDisplayByFlag(regulationPanel, vis.regulation);
       const showAdDetailBase = currentMedia === "ABEMA";
       setDisplayByFlag(adDetailPanel, showAdDetailBase && vis.adDetail);
       setDisplayByFlag(uiGenrePanel, vis.uiGenre);
       setDisplayByFlag(hotProgramWrap, vis.uiGenre && vis.hotProgram);
       setDisplayByFlag(creativeDemoPanel, vis.uiGenre && vis.hotProgram && vis.creativeDemo);
+    }
+
+    function buildRegulations(mediaKey, selectedMedia) {
+      if (Array.isArray(selectedMedia.regulations) && selectedMedia.regulations.length > 0) {
+        return selectedMedia.regulations;
+      }
+      if (mediaRegulationRowsByKey[mediaKey]) {
+        return mediaRegulationRowsByKey[mediaKey];
+      }
+      const specMap = Object.fromEntries(selectedMedia.specs || []);
+      const placement = specMap["掲載面"] || specMap["ポジション"] || "媒体仕様に準拠";
+      const seconds = specMap["再生秒数"] || "媒体仕様に準拠";
+      const clickSkip = specMap["クリック / スキップ"]
+        || `クリック: ${specMap["クリック"] || "媒体仕様に準拠"} / スキップ: ${specMap["スキップ"] || "媒体仕様に準拠"}`;
+      return [
+        ["審査基準", "各媒体の広告掲載基準に準拠し、表現内容・遷移先・クリエイティブ仕様を事前確認します。"],
+        ["配信面規定", placement],
+        ["秒数規定", seconds],
+        ["クリック/スキップ規定", clickSkip]
+      ];
     }
 
     function parsePercent(value) {
@@ -2210,6 +2323,9 @@
       });
 
       specsBody.innerHTML = selectedMedia.specs
+        .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`)
+        .join("");
+      regulationBody.innerHTML = buildRegulations(mediaKey, selectedMedia)
         .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`)
         .join("");
 
