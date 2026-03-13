@@ -742,6 +742,48 @@
       font-weight: 800;
       color: #2b486f;
     }
+    #regulationPanel thead th:first-child,
+    #regulationPanel tbody td:first-child {
+      border-right: 1px solid rgba(83, 120, 170, 0.24);
+    }
+    .regulation-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: #1f3658;
+      cursor: pointer;
+      text-align: left;
+    }
+    .regulation-toggle-title {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: .01em;
+      font-weight: 700;
+    }
+    .regulation-toggle-icon {
+      font-size: 16px;
+      color: #5f7698;
+      line-height: 1;
+      transition: transform .18s ease;
+      flex: 0 0 auto;
+    }
+    #regulationPanel.is-open .regulation-toggle-icon {
+      transform: rotate(180deg);
+    }
+    .regulation-content {
+      display: none;
+      margin-top: 10px;
+    }
+    #regulationPanel.is-open .regulation-content {
+      display: block;
+    }
 
     .chips {
       display: flex;
@@ -801,11 +843,6 @@
     }
     .hot-program-wrap {
       margin-top: 16px;
-    }
-    .regulation-block {
-      margin-top: 18px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(83, 120, 170, 0.18);
     }
     .hot-program-note-row {
       display: flex;
@@ -970,7 +1007,7 @@
     .ad-detail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;
     }
     .ad-detail-card {
       border: 1px solid rgba(83, 120, 170, 0.22);
@@ -982,6 +1019,12 @@
       margin: 0 0 8px;
       font-size: 14px;
       color: #1a2a44;
+    }
+    .ad-detail-section-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #2f4f78;
+      font-weight: 800;
     }
     .ad-detail-card ul {
       margin: 0;
@@ -999,8 +1042,37 @@
     }
     .ad-detail-image img {
       display: block;
-      width: 100%;
+      width: min(100%, 520px);
+      margin: 0 auto;
       height: auto;
+    }
+    .ad-position-table {
+      margin-top: 10px;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12px;
+      color: #2f4f78;
+    }
+    .ad-position-table col:first-child { width: 32%; }
+    .ad-position-table col:nth-child(2),
+    .ad-position-table col:nth-child(3) { width: 34%; }
+    .ad-position-table th,
+    .ad-position-table td {
+      border: 1px solid rgba(83, 120, 170, 0.2);
+      padding: 7px 8px;
+      vertical-align: top;
+      line-height: 1.45;
+      background: #fff;
+    }
+    .ad-position-table thead th {
+      background: #eaf4ff;
+      color: #2b486f;
+      font-weight: 800;
+    }
+    .ad-position-table tbody td:first-child {
+      background: #f7fbff;
+      font-weight: 700;
     }
 
     @media (max-width: 1279px) {
@@ -1108,10 +1180,6 @@
           <div class="edit-block">
             <h4>画像差し替え</h4>
             <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="abemaUiImage" type="button">ABEMA UI</button></div>
-            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="hotProgramImage" type="button">Hot Program</button></div>
-            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativeSpImage" type="button">Creative SP</button></div>
-            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativePcImage" type="button">Creative PC</button></div>
-            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativeCtvImage" type="button">Creative CTV</button></div>
             <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="adDetailLinearImage" type="button">リニア面詳細</button></div>
             <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="adDetailVodImage" type="button">VOD面詳細</button></div>
           </div>
@@ -1122,16 +1190,6 @@
               <input id="abemaUiWidthInput" class="edit-input" type="number" min="40" max="100" value="100" />
             </div>
             <input id="abemaUiWidthRange" class="edit-range" type="range" min="40" max="100" value="100" />
-            <div class="edit-control-row">
-              <span>Hot Program幅(px)</span>
-              <input id="hotProgramWidthInput" class="edit-input" type="number" min="460" max="1100" value="760" />
-            </div>
-            <input id="hotProgramWidthRange" class="edit-range" type="range" min="460" max="1100" value="760" />
-            <div class="edit-control-row">
-              <span>Creative列幅(px)</span>
-              <input id="creativeColWidthInput" class="edit-input" type="number" min="280" max="520" value="380" />
-            </div>
-            <input id="creativeColWidthRange" class="edit-range" type="range" min="280" max="520" value="380" />
           </div>
           <div class="edit-block">
             <h4>ジャンル編集</h4>
@@ -1378,18 +1436,39 @@
             <div class="ad-detail-wrap" id="adDetailSection">
               <div class="ad-detail-grid">
                 <div class="ad-detail-card">
-                  <h4>リニア面</h4>
+                  <h4 class="ad-detail-section-title">リニア面</h4>
                   <ul>
                     <li>ABEMAのテレビコンテンツに配信される広告枠（納品番組と生放送コンテンツを含む）</li>
                     <li>配信ポジションはMidとPostのみ（Preロールなし）</li>
                     <li>尺は15秒 / 30秒 / 60秒のみ</li>
                   </ul>
                   <div class="ad-detail-image">
-                    <img id="adDetailLinearImage" src="./assets/ad-detail-linear.png" alt="リニア面の広告仕様詳細" />
+                    <img id="adDetailLinearImage" src="./assets/ad-detail-linear-flow.png" alt="リニア面の配信ポジション（Pre/Mid/Post）" />
                   </div>
+                  <table class="ad-position-table">
+                    <colgroup>
+                      <col />
+                      <col />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>項目</th>
+                        <th>Mid</th>
+                        <th>Post</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>秒数</td>
+                        <td>15秒 / 30秒 / 60秒</td>
+                        <td>15秒 / 30秒 / 60秒</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <div class="ad-detail-card">
-                  <h4>VOD面</h4>
+                  <h4 class="ad-detail-section-title">VOD面</h4>
                   <ul>
                     <li>ビデオコンテンツに配信される広告枠（一部無料コンテンツのみ）</li>
                     <li>31秒以上のVOD面クリエイティブは6秒地点でスキップ可能</li>
@@ -1397,8 +1476,29 @@
                     <li>尺はPre: 6-15秒、Mid: 6-60秒</li>
                   </ul>
                   <div class="ad-detail-image">
-                    <img id="adDetailVodImage" src="./assets/ad-detail-vod.png" alt="VOD面の広告仕様詳細" />
+                    <img id="adDetailVodImage" src="./assets/ad-detail-vod-flow.png" alt="VOD面の配信ポジション（Pre/Mid/Post）" />
                   </div>
+                  <table class="ad-position-table">
+                    <colgroup>
+                      <col />
+                      <col />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>項目</th>
+                        <th>Pre</th>
+                        <th>Mid</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>再生秒数</td>
+                        <td>6-15秒</td>
+                        <td>6-60秒</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -1426,56 +1526,29 @@
               </div>
             </div>
 
-            <div class="hot-program-wrap" id="hotProgramWrap">
-              <h3>Hot Program（TOP10）</h3>
-              <div class="hot-program-note-row">
-                <p class="hot-program-note">
-                  Hot Programとは、先月対比で人気のコンテンツを上位から10件掲載したランキングです。
-                </p>
-                <a class="hot-program-icon-link" href="./assets/hot-program-capture.png" download="ABEMA_HotProgram_TOP10_202602.png" aria-label="Hot Programをダウンロード">
-                  <img src="./assets/download-icon.png" alt="ダウンロード" />
-                </a>
-              </div>
-              <div class="hot-program-layout">
-                <div class="hot-program-capture">
-                  <img id="hotProgramImage" src="./assets/hot-program-capture.png" alt="ABEMA 2026年2月 Hot Program ランキング TOP10" />
-                </div>
-                <aside id="creativeDemoPanel" class="creative-demo">
-                  <h4>クリエイティブデモ（ABEMA）</h4>
-                  <div class="creative-grid">
-                    <figure class="creative-item sp">
-                      <p class="label">SP面</p>
-                      <img id="creativeSpImage" src="./assets/creative-sp.png" alt="ABEMA SP面 クリエイティブデモ" />
-                    </figure>
-                    <figure class="creative-item pc">
-                      <p class="label">PC面</p>
-                      <img id="creativePcImage" src="./assets/creative-pc.png" alt="ABEMA PC面 クリエイティブデモ" />
-                    </figure>
-                    <figure class="creative-item ctv">
-                      <p class="label">CTV面</p>
-                      <img id="creativeCtvImage" src="./assets/creative-ctv.png" alt="ABEMA CTV面 クリエイティブデモ" />
-                    </figure>
-                  </div>
-                </aside>
-              </div>
-              <section id="regulationPanel" class="regulation-block">
-                <h3>配信規定</h3>
-                <table class="table ratio-1-3">
-                  <colgroup>
-                    <col />
-                    <col />
-                  </colgroup>
-                  <thead>
-                    <tr><th>項目</th><th>内容</th></tr>
-                  </thead>
-                  <tbody id="regulationBody">
-                    <tr><td>配信面規定</td><td>リニア / VODの2面で配信。</td></tr>
-                    <tr><td>クリック規定</td><td>クリック不可。</td></tr>
-                    <tr><td>スキップ規定</td><td>VODのみ31秒以上のクリエイティブで6秒地点からスキップ可。</td></tr>
-                    <tr><td>秒数・ポジション規定</td><td>リニア: 15/30/60秒（Mid/Post）。VOD: Pre 6-15秒、Mid 6-60秒。</td></tr>
-                  </tbody>
-                </table>
-              </section>
+          </article>
+
+          <article id="regulationPanel" class="card panel full">
+            <button id="regulationToggleBtn" class="regulation-toggle" type="button" aria-expanded="false" aria-controls="regulationContent">
+              <h3 class="regulation-toggle-title">配信規定</h3>
+              <span class="regulation-toggle-icon" aria-hidden="true">▼</span>
+            </button>
+            <div id="regulationContent" class="regulation-content">
+              <table class="table ratio-1-3">
+                <colgroup>
+                  <col />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr><th>項目</th><th>内容</th></tr>
+                </thead>
+                <tbody id="regulationBody">
+                  <tr><td>配信面規定</td><td>リニア / VODの2面で配信。</td></tr>
+                  <tr><td>クリック規定</td><td>クリック不可。</td></tr>
+                  <tr><td>スキップ規定</td><td>VODのみ31秒以上のクリエイティブで6秒地点からスキップ可。</td></tr>
+                  <tr><td>秒数・ポジション規定</td><td>リニア: 15/30/60秒（Mid/Post）。VOD: Pre 6-15秒、Mid 6-60秒。</td></tr>
+                </tbody>
+              </table>
             </div>
           </article>
 
@@ -1703,6 +1776,7 @@
     const detailChip = document.getElementById("detailChip");
     const specsBody = document.getElementById("specsBody");
     const regulationBody = document.getElementById("regulationBody");
+    const regulationToggleBtn = document.getElementById("regulationToggleBtn");
     const adDetailSection = document.getElementById("adDetailSection");
     const adDetailPanel = document.getElementById("adDetailPanel");
     const kpiCards = document.querySelectorAll(".kpi-grid .kpi");
@@ -1719,13 +1793,7 @@
     const applyGenreCountBtn = document.getElementById("applyGenreCountBtn");
     const abemaUiWidthRange = document.getElementById("abemaUiWidthRange");
     const abemaUiWidthInput = document.getElementById("abemaUiWidthInput");
-    const hotProgramWidthRange = document.getElementById("hotProgramWidthRange");
-    const hotProgramWidthInput = document.getElementById("hotProgramWidthInput");
-    const creativeColWidthRange = document.getElementById("creativeColWidthRange");
-    const creativeColWidthInput = document.getElementById("creativeColWidthInput");
     const abemaUiCapture = document.querySelector(".abema-ui-capture");
-    const hotProgramCapture = document.querySelector(".hot-program-capture");
-    const hotProgramLayout = document.querySelector(".hot-program-layout");
     const inventoryPieEditor = document.getElementById("inventoryPieEditor");
     const attrPieEditor = document.getElementById("attrPieEditor");
     const sectionVisibilityControls = document.getElementById("sectionVisibilityControls");
@@ -1734,8 +1802,6 @@
     const specOverviewPanel = document.getElementById("specOverviewPanel");
     const regulationPanel = document.getElementById("regulationPanel");
     const uiGenrePanel = document.getElementById("uiGenrePanel");
-    const hotProgramWrap = document.getElementById("hotProgramWrap");
-    const creativeDemoPanel = document.getElementById("creativeDemoPanel");
 
     const mediaDetails = {
       ABEMA: {
@@ -2078,6 +2144,39 @@
       }
     };
 
+    const premiumRateCommonRows = [
+      ["コンテナフォーマット", "MP4（moov atom / 先頭必須）"],
+      ["フレームサイズ", "(W) 1920 x (H) 1080"],
+      ["アスペクト比", "16:9"],
+      ["映像ビットレート（ターゲット平均）", "2,500kbps〜4,000kbps"],
+      ["エンコードモード", "可変 もしくは 固定（固定推奨）"],
+      ["コーデック", "H.264（MPEG4）High Profile Level 4"],
+      ["フレームレート", "29.97fps"],
+      ["プロファイル", "プログレッシブ"],
+      ["音声チャンネルタイプ", "4以下"],
+      ["音声コーデック", "AAC-LC"],
+      ["音声ビットレート", "128kbps または 192kbps（192kbps推奨）"],
+      ["音声サンプリング周波数", "44.1kHz または 48kHz（48kHz推奨）"],
+      ["音声平均ラウドネス値", "-3dBFS 以下（民放連技術規準T-032準拠）"],
+      ["ファイル名", "18MB以内（15秒素材: 9MB推奨）"],
+      ["入稿クリエイティブについて", "前後に0.5秒の無音部分を挿入。映像編集時も音声編集アプリにて、必ず音声波形を確認してください。"],
+      ["ブランド（ftyp）", "mp42 または M4V"],
+      ["映像フォーマット", "YUV420"],
+      ["映像参照フレーム", "4以下"],
+      ["連続Bフレーム数", "3以下"],
+      ["連続タイムコード不連続数", "10以下"],
+      ["音声タイムコード不連続数", "0"]
+    ];
+
+    function buildPremiumRateRegulationRows(cmRule) {
+      return [
+        ["CM尺", cmRule],
+        ...premiumRateCommonRows,
+        ["留意事項", "TTD接続経由では、プレミアムレートのみで記載の全メディア配信が可能です（ハルモニのみご手配の場合はSP・PCのみ配信可能、CTV面はプレミアムレート必須）。"],
+        ["※", "Lemino・Rチャンネルは半端尺は都度お問い合わせ必須。JSPORTS・Rチャンネルは長尺は都度お問い合わせ必須。"]
+      ];
+    }
+
     const mediaRegulationRowsByKey = {
       ABEMA: [
         ["CM尺", "VOD: 6秒以上60秒未満（秒刻みで入稿可） / リニア: 15秒・30秒・60秒"],
@@ -2098,53 +2197,19 @@
         ["入稿本数目安", "4本まで（素材差し替え時は媒体個別ルールに準拠）"],
         ["留意事項", "上記はPMP規定。純広とは仕様が異なる場合があります。"]
       ],
-      TVer: [
-        ["掲載面規定", "リアルタイム配信 / キャッチアップ配信に対応。"],
-        ["クリック規定", "キー局+準キー局でクリック配信可（単価1.1倍）。"],
-        ["スキップ規定", "スキップ不可。"],
-        ["秒数・ポジション規定", "Pre/Mid/Postで6-180秒（局・ポジションごとに可否差分あり）。"]
-      ],
-      DAZN: [
-        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
-        ["クリック/スキップ規定", "LIVE/キャッチアップともにクリック不可・スキップ不可。"],
-        ["秒数規定", "LIVE: 15秒固定、キャッチアップ: 1-30秒（半端尺可）。"],
-        ["ポジション規定", "Preロール。"]
-      ],
-      SPOTV: [
-        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
-        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
-        ["秒数規定", "15秒のみ。"],
-        ["ポジション規定", "Preロール。"]
-      ],
-      Lemino: [
-        ["掲載面規定", "VOD（ハイライト / キャッチアップ / オリジナル）。"],
-        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
-        ["秒数規定", "Pre: 15/30秒、Mid: 15/30/60秒。"],
-        ["デバイス規定", "SP(TAB) / CTV。"]
-      ],
-      "Rチャンネル": [
-        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
-        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
-        ["秒数規定", "15/30/60/90/120秒（半端尺は都度相談）。"],
-        ["ポジション規定", "Midロール。"]
-      ],
-      JSPORTS: [
-        ["掲載面規定", "LIVE面 / キャッチアップ面。"],
-        ["クリック/スキップ規定", "クリック不可・スキップ不可。"],
-        ["秒数規定", "15/30/60秒（長尺・半端尺は都度相談）。"],
-        ["ポジション規定", "Midロール。"]
-      ],
-      "ニコニコ動画": [
-        ["掲載面規定", "UGC動画インストリームビデオPMP。"],
-        ["クリック規定", "クリック可能。"],
-        ["スキップ規定", "1秒以上でスキップ可能。"],
-        ["秒数・ポジション規定", "6秒以上（制限なし）、Pre / Postに対応。"]
-      ]
+      TVer: buildPremiumRateRegulationRows("6-180秒"),
+      DAZN: buildPremiumRateRegulationRows("6-30秒"),
+      "Rチャンネル": buildPremiumRateRegulationRows("15-120秒"),
+      Lemino: buildPremiumRateRegulationRows("15-60秒"),
+      SPOTV: buildPremiumRateRegulationRows("15秒のみ"),
+      JSPORTS: buildPremiumRateRegulationRows("15-60秒"),
+      "ニコニコ動画": buildPremiumRateRegulationRows("6秒以上（※1）")
     };
 
     let currentMedia = "ABEMA";
     let currentInventoryTab = "device";
     let currentAttrTab = "gender";
+    let isRegulationOpen = false;
     let isEditMode = false;
     const mediaSectionVisibility = {};
     const defaultSectionVisibility = {
@@ -2152,18 +2217,14 @@
       attr: true,
       specOverview: true,
       adDetail: true,
-      uiGenre: true,
-      hotProgram: true,
-      creativeDemo: true
+      uiGenre: true
     };
     const sectionDefs = {
       inventory: { label: "在庫構成比", getEl: () => inventoryPanel },
       attr: { label: "利用者属性", getEl: () => attrPanel },
       specOverview: { label: "広告仕様概要", getEl: () => specOverviewPanel },
       adDetail: { label: "広告仕様詳細", getEl: () => adDetailPanel },
-      uiGenre: { label: "画面UIとジャンル", getEl: () => uiGenrePanel },
-      hotProgram: { label: "Hot Program", getEl: () => hotProgramWrap },
-      creativeDemo: { label: "クリエイティブデモ", getEl: () => creativeDemoPanel }
+      uiGenre: { label: "画面UIとジャンル", getEl: () => uiGenrePanel }
     };
 
     function getEditableTargets() {
@@ -2212,9 +2273,12 @@
       const showAdDetailBase = currentMedia === "ABEMA";
       setDisplayByFlag(adDetailPanel, showAdDetailBase && vis.adDetail);
       setDisplayByFlag(uiGenrePanel, vis.uiGenre);
-      setDisplayByFlag(hotProgramWrap, vis.uiGenre && vis.hotProgram);
-      setDisplayByFlag(regulationPanel, vis.uiGenre && vis.hotProgram);
-      setDisplayByFlag(creativeDemoPanel, vis.uiGenre && vis.hotProgram && vis.creativeDemo);
+      setDisplayByFlag(regulationPanel, vis.uiGenre);
+    }
+
+    function applyRegulationOpenState() {
+      regulationPanel.classList.toggle("is-open", isRegulationOpen);
+      regulationToggleBtn.setAttribute("aria-expanded", String(isRegulationOpen));
     }
 
     function buildRegulations(mediaKey, selectedMedia) {
@@ -2356,6 +2420,8 @@
       regulationBody.innerHTML = buildRegulations(mediaKey, selectedMedia)
         .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`)
         .join("");
+      isRegulationOpen = false;
+      applyRegulationOpenState();
 
       renderInventory(currentInventoryTab);
       renderAttr(currentAttrTab);
@@ -2505,25 +2571,8 @@
       abemaUiWidthInput.value = String(v);
       abemaUiCapture.style.maxWidth = `${v}%`;
     }
-    function applyHotProgramWidth(value) {
-      const v = Math.max(460, Math.min(1100, Number(value)));
-      hotProgramWidthRange.value = String(v);
-      hotProgramWidthInput.value = String(v);
-      hotProgramCapture.style.maxWidth = `${v}px`;
-    }
-    function applyCreativeColWidth(value) {
-      const v = Math.max(280, Math.min(520, Number(value)));
-      creativeColWidthRange.value = String(v);
-      creativeColWidthInput.value = String(v);
-      hotProgramLayout.style.gridTemplateColumns = `minmax(0, 1fr) ${v}px`;
-    }
-
     abemaUiWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyAbemaUiWidth(abemaUiWidthRange.value); });
     abemaUiWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyAbemaUiWidth(abemaUiWidthInput.value); });
-    hotProgramWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyHotProgramWidth(hotProgramWidthRange.value); });
-    hotProgramWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyHotProgramWidth(hotProgramWidthInput.value); });
-    creativeColWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyCreativeColWidth(creativeColWidthRange.value); });
-    creativeColWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyCreativeColWidth(creativeColWidthInput.value); });
 
     addGenreBtn.addEventListener("click", () => {
       if (!getCanAdvancedEdit()) return;
@@ -2555,6 +2604,10 @@
     clearAssortSelectionBtn.addEventListener("click", () => {
       document.querySelectorAll("#assortView .segment-option.active").forEach((btn) => btn.classList.remove("active"));
       updateAssortSelectionStatus();
+    });
+    regulationToggleBtn.addEventListener("click", () => {
+      isRegulationOpen = !isRegulationOpen;
+      applyRegulationOpenState();
     });
 
     sectionVisibilityControls.addEventListener("change", (e) => {
@@ -2595,10 +2648,9 @@
     });
 
     applyMediaDetail("ABEMA");
+    applyRegulationOpenState();
     updateAssortSelectionStatus();
     applyAbemaUiWidth(100);
-    applyHotProgramWidth(760);
-    applyCreativeColWidth(380);
     syncGenreCount();
     applyEditModeState();
   </script>
