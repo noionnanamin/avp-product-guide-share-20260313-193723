@@ -1,0 +1,2462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AJA SSP Product Guide | Mock</title>
+  <style>
+    :root {
+      --bg: #f4f7fc;
+      --bg-soft: #eef3fb;
+      --card: #ffffff;
+      --card-strong: #ffffff;
+      --line: rgba(83, 120, 170, 0.2);
+      --text: #1f3658;
+      --muted: #5f7698;
+      --accent: #2ba8ff;
+      --accent-2: #7f75ff;
+      --accent-3: #3de4d8;
+      --warning: #ffc36b;
+      --radius: 18px;
+      --shadow: 0 14px 30px rgba(20, 48, 84, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1a2a44;
+      font-family: Inter, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      background: #f5f7fb;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: #ffffff;
+      padding: 22px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: #1e3a60;
+      margin-bottom: 18px;
+    }
+    .menu {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .menu a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      border: 1px solid transparent;
+    }
+    .menu a.active {
+      color: var(--text);
+      border-color: var(--line);
+      background: #eef5ff;
+    }
+
+    .main {
+      padding: 24px clamp(18px, 4vw, 48px) 42px;
+      width: min(1440px, 100%);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: clamp(22px, 2.4vw, 32px);
+      letter-spacing: .01em;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #36527a;
+    }
+    .topbar-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .role-select {
+      min-height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: #2f4a71;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+    .edit-toggle-btn {
+      min-height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(83, 120, 170, 0.26);
+      background: #f7fbff;
+      color: #234168;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .edit-toggle-btn[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .edit-status {
+      font-size: 12px;
+      color: #526684;
+    }
+    .edit-advanced-panel {
+      display: none;
+      border: 1px solid rgba(83, 120, 170, 0.22);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+    .edit-advanced-panel h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #1a2a44;
+    }
+    .edit-advanced-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .edit-block {
+      border: 1px solid rgba(83, 120, 170, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      background: #f9fbff;
+    }
+    .edit-block h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: #2d4b74;
+    }
+    .edit-control-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .edit-control-row:last-child { margin-bottom: 0; }
+    .edit-input,
+    .edit-range,
+    .edit-btn {
+      min-height: 30px;
+      border-radius: 7px;
+      border: 1px solid rgba(83, 120, 170, 0.26);
+      background: #fff;
+      color: #2c466e;
+      font-size: 12px;
+    }
+    .edit-range { width: 100%; }
+    .edit-input {
+      width: 72px;
+      padding: 0 8px;
+    }
+    .edit-btn {
+      padding: 0 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .edit-btn.secondary {
+      background: #f4f8ff;
+      font-weight: 600;
+    }
+    .toggle-list {
+      display: grid;
+      gap: 6px;
+    }
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #2f4a71;
+    }
+    .toggle-item input {
+      width: 14px;
+      height: 14px;
+    }
+    .pie-editor-group {
+      display: grid;
+      gap: 8px;
+    }
+    .pie-editor-title {
+      margin: 0;
+      font-size: 12px;
+      color: #2d4b74;
+      font-weight: 700;
+    }
+    .pie-editor-row {
+      display: grid;
+      grid-template-columns: 1fr 74px;
+      gap: 6px;
+      align-items: center;
+    }
+    .pie-editor-row span {
+      font-size: 12px;
+      color: #36527a;
+    }
+    [contenteditable="true"].is-editing {
+      outline: 2px dashed rgba(43, 168, 255, 0.45);
+      outline-offset: 2px;
+      border-radius: 4px;
+      cursor: text;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: none;
+    }
+
+    #listView { display: block; }
+    #detailView { display: none; }
+    #detailView.active { display: block; }
+    #assortView { display: none; }
+    #assortView.active { display: block; }
+    #crossRuleView { display: none; }
+    #crossRuleView.active { display: block; }
+    #listView.hidden { display: none; }
+
+    .media-grid {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .lower-section {
+      margin-top: 18px;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+      backdrop-filter: none;
+    }
+    .lower-section h3 {
+      margin: 0 0 14px;
+      font-size: clamp(22px, 2.4vw, 32px);
+      color: #0f213f;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+    .lower-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .lower-card {
+      grid-column: span 4;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      min-height: 120px;
+    }
+    .lower-card.clickable {
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .lower-card.clickable:hover {
+      transform: translateY(-2px);
+      border-color: rgba(61, 228, 216, 0.45);
+    }
+    .assort-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .assort-meta-card {
+      grid-column: span 3;
+      border: 1px solid rgba(83, 120, 170, 0.2);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+    }
+    .assort-meta-card h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: #5a7092;
+    }
+    .assort-meta-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #1f3658;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .segment-section {
+      margin-top: 14px;
+      border: 1px solid rgba(83, 120, 170, 0.2);
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(28, 63, 109, 0.08);
+    }
+    .segment-section h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #27466f;
+    }
+    .segment-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .segment-option {
+      grid-column: span 3;
+      min-height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(83, 120, 170, 0.24);
+      background: #f6faff;
+      color: #2b486f;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+    .segment-option.active {
+      background: #2f8fff;
+      border-color: #2f8fff;
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(47, 143, 255, 0.32);
+    }
+    .segment-option:hover {
+      transform: translateY(-1px);
+      border-color: rgba(47, 143, 255, 0.5);
+    }
+    .segment-subtitle {
+      grid-column: span 12;
+      margin: 2px 0 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #47658c;
+    }
+    .segment-line {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      background: #fff;
+      margin-bottom: 8px;
+    }
+    .segment-line:last-child { margin-bottom: 0; }
+    .segment-line-title {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: #2f4f78;
+      padding-top: 8px;
+    }
+    .segment-line-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .segment-line-options .segment-option {
+      grid-column: auto;
+      min-width: 120px;
+      white-space: nowrap;
+      padding: 0 10px;
+    }
+    .segment-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .lower-card h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #1f3658;
+      letter-spacing: .01em;
+    }
+    .lower-card p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .media-card {
+      grid-column: span 3;
+      padding: 14px;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .media-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(61, 228, 216, 0.45);
+    }
+    .media-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .media-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid rgba(213, 231, 255, 0.28);
+      background: #f6f9ff;
+      color: #36527a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .01em;
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+    .media-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-icon.netflix { background: #101010; color: #e50914; }
+    .media-icon.tver { background: #eaf6ff; color: #1787c8; }
+    .media-icon.dazn { background: #111; color: #fff; font-size: 8px; }
+    .media-icon.lemino { background: linear-gradient(145deg, #ff7ca8, #ffb15c); color: #fff; }
+    .media-icon.rch { background: #ca1010; color: #fff; }
+    .media-icon.jsp { background: #f5f7ff; color: #163e9e; }
+    .media-icon.spotv { background: linear-gradient(145deg, #4fd9b6, #2d6ed9); color: #fff; font-size: 8px; }
+    .media-icon.nico { background: #181818; color: #fff; font-size: 8px; }
+    .media-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      color: #1f3658;
+    }
+    .media-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      color: #36527a;
+      background: #f3f8ff;
+    }
+    .media-desc {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .hero {
+      padding: 18px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+    .hero h2 {
+      margin: 0 0 8px;
+      font-size: clamp(20px, 2.1vw, 30px);
+    }
+    .media-heading {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .detail-media-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+    .detail-media-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-title {
+      margin: 0;
+      font-size: clamp(20px, 2.1vw, 30px);
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .btn {
+      border: 1px solid var(--line);
+      color: #2f4a71;
+      background: #ffffff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: rgba(43, 168, 255, .55); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .kpi {
+      grid-column: span 3;
+      padding: 14px 14px 14px 52px;
+      position: relative;
+    }
+    .kpi-icon {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 28px;
+      height: 28px;
+      color: #89a5c6;
+      pointer-events: none;
+    }
+    .kpi-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .kpi .label {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: var(--muted);
+      padding-right: 0;
+    }
+    .kpi .value {
+      margin: 0;
+      font-size: clamp(22px, 2.5vw, 34px);
+      color: #1f3658;
+      font-weight: 800;
+      text-shadow: none;
+      line-height: 1.1;
+    }
+    .kpi .sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #5f7698;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .panel {
+      padding: 16px;
+      min-height: 300px;
+    }
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      letter-spacing: .01em;
+    }
+    .panel.chart { grid-column: span 4; }
+    .panel.specs { grid-column: span 4; }
+    .panel.genre { grid-column: span 4; }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+    }
+    .donut {
+      width: 170px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(
+        var(--accent) 0 67.3%,
+        var(--accent-2) 67.3% 86.1%,
+        var(--accent-3) 86.1% 100%
+      );
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.6), 0 8px 18px rgba(43, 168, 255, 0.18);
+    }
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+    }
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      z-index: 1;
+      font-size: 12px;
+      color: #6a82a3;
+      line-height: 1.4;
+    }
+    .donut-center strong {
+      display: block;
+      color: #1f3658;
+      font-size: 20px;
+      letter-spacing: .01em;
+    }
+    .legend {
+      display: grid;
+      gap: 10px;
+    }
+    .legend-item {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #355276;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .legend-item span:last-child {
+      color: #6b83a5;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .tab-btn {
+      font-size: 12px;
+      color: #47658c;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      padding: 7px 11px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      color: #114276;
+      background: #eaf4ff;
+      border-color: rgba(83, 120, 170, 0.34);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: #36527a;
+    }
+    .table th, .table td {
+      border-bottom: 1px solid rgba(147, 186, 255, .14);
+      padding: 9px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .table th {
+      color: #5f7698;
+      font-weight: 600;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chips span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: #36527a;
+      background: #f3f8ff;
+    }
+
+    .panel.full {
+      grid-column: span 12;
+      min-height: auto;
+    }
+    .genre-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 16px;
+      align-items: start;
+    }
+    .abema-ui-capture {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      background: #ffffff;
+    }
+    .abema-ui-capture img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .genre-tile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+      max-width: 420px;
+      margin-left: auto;
+    }
+    .genre-tile {
+      border-radius: 10px;
+      padding: 12px 10px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .01em;
+      color: #1f3658;
+      text-align: center;
+      border: 1px solid rgba(118, 137, 166, 0.28);
+      background: linear-gradient(145deg, #ffffff, #eef4fd);
+      text-shadow: none;
+      box-shadow: inset 0 0 10px rgba(131, 164, 206, 0.18);
+    }
+    .hot-program-wrap {
+      margin-top: 16px;
+    }
+    .hot-program-note-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px;
+    }
+    .hot-program-note {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #526684;
+    }
+    .hot-program-icon-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(83, 120, 170, 0.26);
+      background: #f7fbff;
+      flex: 0 0 auto;
+    }
+    .hot-program-icon-link img {
+      width: 16px;
+      height: 16px;
+      display: block;
+      object-fit: contain;
+    }
+    .hot-program-icon-link:hover { background: #eef6ff; }
+    .hot-program-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .hot-program-capture {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      background: #ffffff;
+      max-width: 760px;
+    }
+    .hot-program-capture img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .creative-demo {
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .creative-demo h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #1a2a44;
+    }
+    .creative-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 8px;
+    }
+    .creative-item {
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .creative-item.sp {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    .creative-item.pc {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .creative-item.ctv {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    .creative-item .label {
+      margin: 0;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #345172;
+      background: #f4f8ff;
+      border-bottom: 1px solid rgba(83, 120, 170, 0.14);
+    }
+    .creative-item img {
+      display: block;
+      width: 100%;
+      object-fit: contain;
+      background: #f6f9ff;
+    }
+    .creative-item.sp img {
+      height: 250px;
+    }
+    .creative-item.pc img,
+    .creative-item.ctv img {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+    .cross-rule-wrap {
+      margin-top: 16px;
+    }
+    .cross-rule-note {
+      margin: 0 0 10px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #526684;
+    }
+    .cross-rule-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .rule-capture {
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .rule-capture img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .media-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .media-cell .media-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      font-size: 8px;
+    }
+    .ad-detail-wrap {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .ad-detail-note {
+      margin: 0;
+      font-size: 13px;
+      color: #526684;
+      line-height: 1.65;
+    }
+    .ad-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .ad-detail-card {
+      border: 1px solid rgba(83, 120, 170, 0.22);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+    }
+    .ad-detail-card h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #1a2a44;
+    }
+    .ad-detail-card ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: #3b4f6e;
+      line-height: 1.6;
+    }
+    .ad-detail-image {
+      border: 1px solid rgba(83, 120, 170, 0.22);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      margin-top: 10px;
+    }
+    .ad-detail-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 1279px) {
+      .edit-advanced-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .media-card { grid-column: span 4; }
+      .lower-card { grid-column: span 6; }
+      .assort-meta-card { grid-column: span 6; }
+      .segment-option { grid-column: span 4; }
+      .kpi { grid-column: span 6; }
+      .panel.chart { grid-column: span 6; }
+      .panel.specs, .panel.genre { grid-column: span 12; }
+      .genre-layout { grid-template-columns: minmax(0, 1fr) 360px; }
+      .genre-tile { font-size: 15px; }
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { width: 100%; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .hero-actions { justify-content: flex-start; }
+      .media-card { grid-column: span 6; }
+      .lower-card { grid-column: span 12; }
+      .assort-meta-card { grid-column: span 12; }
+      .panel.chart { grid-column: span 12; }
+      .donut-wrap {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      .hot-program-layout {
+        grid-template-columns: 1fr;
+      }
+      .edit-advanced-grid {
+        grid-template-columns: 1fr;
+      }
+      .creative-grid {
+        grid-template-columns: 1fr;
+      }
+      .creative-item.sp,
+      .creative-item.pc,
+      .creative-item.ctv {
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .creative-item.sp img,
+      .creative-item.pc img,
+      .creative-item.ctv img {
+        height: auto;
+      }
+      .cross-rule-layout {
+        grid-template-columns: 1fr;
+      }
+      .segment-option { grid-column: span 6; }
+      .ad-detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .genre-layout { grid-template-columns: 1fr; }
+      .genre-tile-grid {
+        max-width: none;
+        margin-left: 0;
+      }
+      .genre-tile { font-size: 14px; }
+    }
+    @media (max-width: 640px) {
+      .media-card { grid-column: span 12; }
+      .kpi { grid-column: span 12; }
+      .segment-option { grid-column: span 12; }
+      .genre-tile-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">AJA Video Platform</div>
+      <nav class="menu">
+        <a href="#">ダッシュボード</a>
+        <a href="#" class="active">プロダクトガイド</a>
+        <a href="#">媒体管理</a>
+        <a href="#">配信実績</a>
+        <a href="#">設定</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>プロダクトガイド</h1>
+        <div class="topbar-controls">
+          <div class="chip">2026年1-3月期 / Mock</div>
+          <select id="roleSelect" class="role-select" aria-label="表示権限">
+            <option value="AJA">AJA（編集可）</option>
+            <option value="Buyer">Buyer（閲覧のみ）</option>
+          </select>
+          <button id="editToggleBtn" class="edit-toggle-btn" type="button">編集モードON</button>
+          <span id="editStatus" class="edit-status">現在: 閲覧モード</span>
+        </div>
+      </div>
+      <section id="editAdvancedPanel" class="edit-advanced-panel" aria-label="AJA編集拡張">
+        <h3>AJA編集拡張（画像・サイズ・ジャンル）</h3>
+        <div class="edit-advanced-grid">
+          <div class="edit-block">
+            <h4>画像差し替え</h4>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="abemaUiImage" type="button">ABEMA UI</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="hotProgramImage" type="button">Hot Program</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativeSpImage" type="button">Creative SP</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativePcImage" type="button">Creative PC</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="creativeCtvImage" type="button">Creative CTV</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="adDetailLinearImage" type="button">リニア面詳細</button></div>
+            <div class="edit-control-row"><button class="edit-btn secondary image-replace-btn" data-target-image="adDetailVodImage" type="button">VOD面詳細</button></div>
+          </div>
+          <div class="edit-block">
+            <h4>サイズ調整</h4>
+            <div class="edit-control-row">
+              <span>ABEMA UI幅(%)</span>
+              <input id="abemaUiWidthInput" class="edit-input" type="number" min="40" max="100" value="100" />
+            </div>
+            <input id="abemaUiWidthRange" class="edit-range" type="range" min="40" max="100" value="100" />
+            <div class="edit-control-row">
+              <span>Hot Program幅(px)</span>
+              <input id="hotProgramWidthInput" class="edit-input" type="number" min="460" max="1100" value="760" />
+            </div>
+            <input id="hotProgramWidthRange" class="edit-range" type="range" min="460" max="1100" value="760" />
+            <div class="edit-control-row">
+              <span>Creative列幅(px)</span>
+              <input id="creativeColWidthInput" class="edit-input" type="number" min="280" max="520" value="380" />
+            </div>
+            <input id="creativeColWidthRange" class="edit-range" type="range" min="280" max="520" value="380" />
+          </div>
+          <div class="edit-block">
+            <h4>ジャンル編集</h4>
+            <div class="edit-control-row">
+              <button id="addGenreBtn" class="edit-btn" type="button">項目を追加</button>
+              <button id="removeGenreBtn" class="edit-btn secondary" type="button">項目を削除</button>
+            </div>
+            <div class="edit-control-row">
+              <span>項目数</span>
+              <input id="genreCountInput" class="edit-input" type="number" min="1" max="30" value="12" />
+              <button id="applyGenreCountBtn" class="edit-btn secondary" type="button">適用</button>
+            </div>
+            <div class="edit-control-row"><span class="edit-status">ジャンル名はタイルを直接クリックして編集</span></div>
+          </div>
+          <div class="edit-block">
+            <h4>円グラフ数値編集</h4>
+            <div class="pie-editor-group">
+              <p class="pie-editor-title">在庫構成比（現在タブ）</p>
+              <div id="inventoryPieEditor"></div>
+              <p class="pie-editor-title">利用者属性（現在タブ）</p>
+              <div id="attrPieEditor"></div>
+              <div class="edit-control-row"><span class="edit-status">数値変更で円グラフが即時更新されます</span></div>
+            </div>
+          </div>
+          <div class="edit-block">
+            <h4>項目表示切替（媒体別）</h4>
+            <div id="sectionVisibilityControls" class="toggle-list"></div>
+            <div class="edit-control-row"><span class="edit-status">現在表示中の媒体にのみ反映</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="listView">
+        <div class="media-grid">
+          <article class="card media-card" data-media="ABEMA">
+            <div class="media-logo-row">
+              <span class="media-icon"><img src="./assets/abema-logo.png" alt="ABEMAロゴ" /></span>
+              <div class="media-logo">ABEMA</div>
+            </div>
+            <div class="media-tags"><span class="tag">ALLデバイス</span><span class="tag">Linear/VOD</span></div>
+            <p class="media-desc">ニュース・恋愛・アニメ・スポーツなど、幅広いユーザーにリーチ可能。</p>
+          </article>
+          <article class="card media-card" data-media="TVer">
+            <div class="media-logo-row">
+              <span class="media-icon tver"><img src="./assets/tver-logo.png" alt="TVerロゴ" /></span>
+              <div class="media-logo">TVer</div>
+            </div>
+            <div class="media-tags"><span class="tag">ALLデバイス</span><span class="tag">15〜180秒</span></div>
+            <p class="media-desc">民放見逃しを中心に高リーチ。プレロール/ミッドロール配信に強み。</p>
+          </article>
+          <article class="card media-card" data-media="DAZN">
+            <div class="media-logo-row">
+              <span class="media-icon dazn"><img src="./assets/dazn-logo.png" alt="DAZNロゴ" /></span>
+              <div class="media-logo">DAZN</div>
+            </div>
+            <div class="media-tags"><span class="tag">SP/CTV</span><span class="tag">スポーツ</span></div>
+            <p class="media-desc">スポーツ文脈で高いエンゲージメントを獲得しやすい配信面。</p>
+          </article>
+          <article class="card media-card" data-media="Lemino">
+            <div class="media-logo-row">
+              <span class="media-icon lemino"><img src="./assets/lemino-logo.png" alt="Leminoロゴ" /></span>
+              <div class="media-logo">Lemino</div>
+            </div>
+            <div class="media-tags"><span class="tag">SP/CTV</span><span class="tag">VOD</span></div>
+            <p class="media-desc">注目コンテンツ時にMAUが伸び、可処分時間帯への接触が強い。</p>
+          </article>
+          <article class="card media-card" data-media="Rチャンネル">
+            <div class="media-logo-row">
+              <span class="media-icon rch"><img src="./assets/rchannel-logo.png" alt="Rチャンネルロゴ" /></span>
+              <div class="media-logo">Rチャンネル</div>
+            </div>
+            <div class="media-tags"><span class="tag">ALLデバイス</span><span class="tag">リニア配信</span></div>
+            <p class="media-desc">24時間無料で視聴可能。高い視聴完了率と長尺配信に対応した在庫が強み。</p>
+          </article>
+          <article class="card media-card" data-media="JSPORTS">
+            <div class="media-logo-row">
+              <span class="media-icon jsp"><img src="./assets/jsports-logo.png" alt="JSPORTSロゴ" /></span>
+              <div class="media-logo">JSPORTS</div>
+            </div>
+            <div class="media-tags"><span class="tag">ALLデバイス</span><span class="tag">スポーツ</span></div>
+            <p class="media-desc">年間を通じて豊富なスポーツ番組を配信。視聴体験を損なわない広告配信に対応。</p>
+          </article>
+          <article class="card media-card" data-media="SPOTV">
+            <div class="media-logo-row">
+              <span class="media-icon spotv"><img src="./assets/spotv-logo.png" alt="SPOTVロゴ" /></span>
+              <div class="media-logo">SPOTV</div>
+            </div>
+            <div class="media-tags"><span class="tag">SP中心</span><span class="tag">MLB</span></div>
+            <p class="media-desc">MLBを中心にしたライブ配信面。スポーツ関心層へ効率的なリーチが可能。</p>
+          </article>
+          <article class="card media-card" data-media="ニコニコ動画">
+            <div class="media-logo-row">
+              <span class="media-icon nico">nico</span>
+              <div class="media-logo">ニコニコ動画</div>
+            </div>
+            <div class="media-tags"><span class="tag">PC/SP</span><span class="tag">UGC</span></div>
+            <p class="media-desc">コメント文化を持つ国内最大級UGCプラットフォーム。高いエンゲージメントが特長。</p>
+          </article>
+        </div>
+
+        <section class="lower-section" aria-label="AJASSP MENU">
+          <h3>AJASSP MENU</h3>
+          <div class="lower-grid">
+            <article class="lower-card">
+              <h4>パッケージ</h4>
+              <p>目的別に媒体と配信条件をまとめた提案セット。短期間で配信設計を開始できます。</p>
+            </article>
+            <article class="lower-card clickable" data-menu="assort">
+              <h4>アソート</h4>
+              <p>ターゲットやKPIに合わせて、媒体・ジャンル・秒数を組み合わせる柔軟な配信メニューです。</p>
+            </article>
+            <article class="lower-card clickable" data-menu="cross-rule">
+              <h4>横断ルール</h4>
+              <p>媒体横断でのフリークエンシーや除外条件を統一し、重複接触の最適化と運用効率を高めます。</p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section id="detailView">
+        <div class="card hero">
+          <div>
+            <div class="media-heading">
+              <span class="media-icon detail-media-icon" id="detailMediaIcon"><img src="./assets/abema-logo.png" alt="ABEMAロゴ" /></span>
+              <h2 class="media-title" id="detailTitle">ABEMA</h2>
+            </div>
+            <p id="detailDescription">
+              好きな時間に好きな場所で、話題の動画を楽しめる未来のテレビ。
+              ニュース・恋愛・アニメ・スポーツまで幅広く、ALLデバイス配信に対応。
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn" id="backBtn">一覧に戻る</button>
+            <span class="chip" id="detailChip">ALLデバイス</span>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <article class="card kpi">
+            <span class="kpi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="7" y="2.5" width="10" height="19" rx="2.2"></rect>
+                <line x1="10" y1="5.5" x2="14" y2="5.5"></line>
+                <circle cx="12" cy="18.5" r="1"></circle>
+              </svg>
+            </span>
+            <p class="label">主要指標（2025年9月時点）</p>
+            <p class="value">2,771万+</p>
+            <div class="sub">累計アプリダウンロード</div>
+          </article>
+          <article class="card kpi">
+            <span class="kpi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="7.8" r="2.2"></circle>
+                <circle cx="6.6" cy="9.3" r="1.7"></circle>
+                <circle cx="17.4" cy="9.3" r="1.7"></circle>
+                <path d="M8.8 16.8c.3-1.8 1.6-3.1 3.2-3.1s2.9 1.3 3.2 3.1"></path>
+                <path d="M3.9 17.2c.2-1.2 1-2.1 2-2.1"></path>
+                <path d="M18.1 15.1c1 0 1.8.9 2 2.1"></path>
+              </svg>
+            </span>
+            <p class="label">想定月間UU数</p>
+            <p class="value">1,200万</p>
+            <div class="sub">ユニークユーザー数（月間想定）</div>
+          </article>
+          <article class="card kpi">
+            <span class="kpi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M2.5 12s3.8-5.5 9.5-5.5S21.5 12 21.5 12s-3.8 5.5-9.5 5.5S2.5 12 2.5 12z"></path>
+                <circle cx="12" cy="12" r="2.6"></circle>
+              </svg>
+            </span>
+            <p class="label">視聴完了率（15秒）</p>
+            <p class="value">94%</p>
+            <div class="sub">VOD / リニア平均</div>
+          </article>
+          <article class="card kpi">
+            <span class="kpi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="7.8" r="2.4"></circle>
+                <path d="M6.8 18.5c.4-2.4 2.3-4.1 5.2-4.1s4.8 1.7 5.2 4.1"></path>
+              </svg>
+            </span>
+            <p class="label">媒体横断ユーザー重複割合</p>
+            <p class="value">5.6%</p>
+            <div class="sub">YouTubeとの調査 マクロミルで実施</div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article id="inventoryPanel" class="card panel chart">
+            <h3>在庫構成比</h3>
+            <div class="tabs">
+              <button class="tab-btn active" data-inv="device">デバイス</button>
+              <button class="tab-btn" data-inv="surface">配信面</button>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="inventoryDonut">
+                <div class="donut-center" id="inventoryCenter"><strong>100%</strong>デバイス全体</div>
+              </div>
+              <div class="legend" id="inventoryLegend">
+                <div class="legend-item"><span class="dot" style="background:var(--accent)"></span><span>スマホ</span><span>67.3%</span></div>
+                <div class="legend-item"><span class="dot" style="background:var(--accent-2)"></span><span>CTV</span><span>18.8%</span></div>
+                <div class="legend-item"><span class="dot" style="background:var(--accent-3)"></span><span>PC</span><span>13.9%</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article id="attrPanel" class="card panel chart">
+            <h3>利用者属性</h3>
+            <div class="tabs">
+              <button class="tab-btn active" data-attr="gender">性別</button>
+              <button class="tab-btn" data-attr="age">年代</button>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="attrDonut">
+                <div class="donut-center" id="attrCenter"><strong>性別</strong>男性 / 女性</div>
+              </div>
+              <div class="legend" id="attrLegend">
+                <div class="legend-item"><span class="dot" style="background:var(--accent)"></span><span>男性</span><span>52%</span></div>
+                <div class="legend-item"><span class="dot" style="background:var(--accent-2)"></span><span>女性</span><span>48%</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article id="specOverviewPanel" class="card panel specs">
+            <h3>広告仕様概要</h3>
+            <table class="table">
+              <thead>
+                <tr><th>項目</th><th>内容</th></tr>
+              </thead>
+              <tbody id="specsBody">
+                <tr><td>掲載面</td><td>リニア / VOD</td></tr>
+                <tr><td>視聴完了率</td><td>15秒: 94% / 30秒: 94% / 60秒: 90%</td></tr>
+                <tr><td>スキップ</td><td>VODのみ31秒以上で6秒地点から可</td></tr>
+                <tr><td>再生秒数</td><td>Pre / Mid / Post（6〜60秒）</td></tr>
+                <tr><td>imp定義</td><td>0%地点再生のみをimpとして計測</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="card panel full" id="adDetailPanel">
+            <h3>広告仕様詳細</h3>
+            <div class="ad-detail-wrap" id="adDetailSection">
+              <div class="ad-detail-grid">
+                <div class="ad-detail-card">
+                  <h4>リニア面</h4>
+                  <ul>
+                    <li>ABEMAのテレビコンテンツに配信される広告枠（納品番組と生放送コンテンツを含む）</li>
+                    <li>配信ポジションはMidとPostのみ（Preロールなし）</li>
+                    <li>尺は15秒 / 30秒 / 60秒のみ</li>
+                  </ul>
+                  <div class="ad-detail-image">
+                    <img id="adDetailLinearImage" src="./assets/ad-detail-linear.png" alt="リニア面の広告仕様詳細" />
+                  </div>
+                </div>
+                <div class="ad-detail-card">
+                  <h4>VOD面</h4>
+                  <ul>
+                    <li>ビデオコンテンツに配信される広告枠（一部無料コンテンツのみ）</li>
+                    <li>31秒以上のVOD面クリエイティブは6秒地点でスキップ可能</li>
+                    <li>配信ポジションはPreとMidのみ（Postロールなし）</li>
+                    <li>尺はPre: 6-15秒、Mid: 6-60秒</li>
+                  </ul>
+                  <div class="ad-detail-image">
+                    <img id="adDetailVodImage" src="./assets/ad-detail-vod.png" alt="VOD面の広告仕様詳細" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="uiGenrePanel" class="card panel full">
+            <h3>画面UIとジャンル</h3>
+            <div class="genre-layout">
+              <div class="abema-ui-capture">
+                <img id="abemaUiImage" src="./assets/abema-ui-capture.png" alt="ABEMAの画面UIキャプチャ" />
+              </div>
+              <div id="genreTileGrid" class="genre-tile-grid">
+                <div class="genre-tile">MUSIC</div>
+                <div class="genre-tile">HIP HOP</div>
+                <div class="genre-tile">ドラマ</div>
+                <div class="genre-tile">SPORTS</div>
+                <div class="genre-tile">映画</div>
+                <div class="genre-tile">アニメ</div>
+                <div class="genre-tile">麻雀</div>
+                <div class="genre-tile">将棋</div>
+                <div class="genre-tile">news</div>
+                <div class="genre-tile">韓国・中国</div>
+                <div class="genre-tile">恋愛・リアリティ</div>
+                <div class="genre-tile">K-POP</div>
+              </div>
+            </div>
+
+            <div class="hot-program-wrap" id="hotProgramWrap">
+              <h3>Hot Program（TOP10）</h3>
+              <div class="hot-program-note-row">
+                <p class="hot-program-note">
+                  Hot Programとは、先月対比で人気のコンテンツを上位から10件掲載したランキングです。
+                </p>
+                <a class="hot-program-icon-link" href="./assets/hot-program-capture.png" download="ABEMA_HotProgram_TOP10_202602.png" aria-label="Hot Programをダウンロード">
+                  <img src="./assets/download-icon.png" alt="ダウンロード" />
+                </a>
+              </div>
+              <div class="hot-program-layout">
+                <div class="hot-program-capture">
+                  <img id="hotProgramImage" src="./assets/hot-program-capture.png" alt="ABEMA 2026年2月 Hot Program ランキング TOP10" />
+                </div>
+                <aside id="creativeDemoPanel" class="creative-demo">
+                  <h4>クリエイティブデモ（ABEMA）</h4>
+                  <div class="creative-grid">
+                    <figure class="creative-item sp">
+                      <p class="label">SP面</p>
+                      <img id="creativeSpImage" src="./assets/creative-sp.png" alt="ABEMA SP面 クリエイティブデモ" />
+                    </figure>
+                    <figure class="creative-item pc">
+                      <p class="label">PC面</p>
+                      <img id="creativePcImage" src="./assets/creative-pc.png" alt="ABEMA PC面 クリエイティブデモ" />
+                    </figure>
+                    <figure class="creative-item ctv">
+                      <p class="label">CTV面</p>
+                      <img id="creativeCtvImage" src="./assets/creative-ctv.png" alt="ABEMA CTV面 クリエイティブデモ" />
+                    </figure>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <section id="assortView">
+        <div class="card hero">
+          <div>
+            <h2 class="media-title">アソート</h2>
+            <p>ターゲティングしたいユーザーが集まるコンテンツへの配信が可能なメニューです。将来のDeal作成拡張を見据えて、セグメントを選択できるUIにしています。</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn" id="backFromAssortBtn">一覧に戻る</button>
+          </div>
+        </div>
+
+        <article class="card panel full">
+          <div class="assort-meta-grid">
+            <div class="assort-meta-card">
+              <h4>単価</h4>
+              <p>変更なし（お問い合わせください）</p>
+            </div>
+            <div class="assort-meta-card">
+              <h4>媒体</h4>
+              <p>ABEMA / TVer / SPOTV / JSPORTS</p>
+            </div>
+            <div class="assort-meta-card">
+              <h4>セグメント種別</h4>
+              <p>デモグラ / アフィニティ</p>
+            </div>
+            <div class="assort-meta-card">
+              <h4>備考</h4>
+              <p>2種の掛け合わせ選択が可能</p>
+            </div>
+          </div>
+
+          <section class="segment-section">
+            <h4>1) デモグラフィック</h4>
+            <div id="demoSegmentGrid">
+              <div class="segment-line">
+                <p class="segment-line-title">10代刻み</p>
+                <div class="segment-line-options">
+                  <button class="segment-option" type="button">MF10s</button>
+                  <button class="segment-option" type="button">MF20s</button>
+                  <button class="segment-option" type="button">MF30s</button>
+                  <button class="segment-option" type="button">MF40s</button>
+                  <button class="segment-option" type="button">MF50s</button>
+                </div>
+              </div>
+              <div class="segment-line">
+                <p class="segment-line-title">マーケティング年齢 + teen</p>
+                <div class="segment-line-options">
+                  <button class="segment-option" type="button">MFteen</button>
+                  <button class="segment-option" type="button">MF1</button>
+                  <button class="segment-option" type="button">MF2</button>
+                  <button class="segment-option" type="button">MF3</button>
+                </div>
+              </div>
+              <div class="segment-line">
+                <p class="segment-line-title">その他区分</p>
+                <div class="segment-line-options">
+                  <button class="segment-option" type="button">18-24歳</button>
+                  <button class="segment-option" type="button">25-34歳</button>
+                  <button class="segment-option" type="button">35-44歳</button>
+                  <button class="segment-option" type="button">45-54歳</button>
+                  <button class="segment-option" type="button">55-64歳</button>
+                  <button class="segment-option" type="button">65歳以上</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="segment-section">
+            <h4>2) アフィニティ</h4>
+            <div class="segment-grid" id="affinitySegmentGrid">
+              <button class="segment-option" type="button">銀行/金融</button>
+              <button class="segment-option" type="button">美容/健康</button>
+              <button class="segment-option" type="button">旅行</button>
+              <button class="segment-option" type="button">ライフスタイル趣味(ファッション)</button>
+              <button class="segment-option" type="button">フード/ダイニング</button>
+              <button class="segment-option" type="button">家庭/園芸</button>
+              <button class="segment-option" type="button">乗り物/交通機関</button>
+              <button class="segment-option" type="button">ライフスタイル趣味(アウトドア)</button>
+              <button class="segment-option" type="button">ニュース/政治</button>
+              <button class="segment-option" type="button">ショッピング</button>
+              <button class="segment-option" type="button">ゲーム</button>
+              <button class="segment-option" type="button">ライフスタイル趣味(ペット)</button>
+              <button class="segment-option" type="button">スポーツ/フィットネス</button>
+              <button class="segment-option" type="button">テクノロジー</button>
+              <button class="segment-option" type="button">ビジネス</button>
+              <button class="segment-option" type="button">メディア/エンターテイメント</button>
+              <p class="segment-subtitle">新規リリース</p>
+              <button class="segment-option" type="button">アルコール</button>
+              <button class="segment-option" type="button">アニメ/漫画</button>
+              <button class="segment-option" type="button">KPOP</button>
+              <button class="segment-option" type="button">既婚/未婚</button>
+              <button class="segment-option" type="button">年収500万円未満</button>
+              <button class="segment-option" type="button">年収500-1000万円</button>
+              <button class="segment-option" type="button">年収1000万円以上</button>
+            </div>
+          </section>
+
+          <div class="segment-actions">
+            <button class="edit-btn" id="clearAssortSelectionBtn" type="button">選択をクリア</button>
+            <span class="edit-status" id="assortSelectionStatus">選択中: 0件</span>
+          </div>
+        </article>
+      </section>
+
+      <section id="crossRuleView">
+        <div class="card hero">
+          <div>
+            <h2 class="media-title">媒体横断ルール</h2>
+            <p>媒体ごとの配信条件と単価ルールを、添付キャプチャと比較表で確認できます。</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn" id="backFromCrossBtn">一覧に戻る</button>
+          </div>
+        </div>
+
+        <article class="card panel full">
+          <div class="cross-rule-wrap">
+            <div class="cross-rule-layout">
+              <div class="rule-capture">
+                <img src="./assets/cross-media-compare.png" alt="媒体別比較のキャプチャ" />
+              </div>
+              <div class="rule-capture">
+                <img src="./assets/cross-media-pricing.png" alt="単価ルールのキャプチャ" />
+              </div>
+            </div>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>メディア</th>
+                  <th>デバイス</th>
+                  <th>クリック</th>
+                  <th>スキップ</th>
+                  <th>主な尺ルール</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon"><img src="./assets/abema-logo.png" alt="ABEMA" /></span>ABEMA</span></td>
+                  <td>ALLデバイス</td>
+                  <td>不可</td>
+                  <td>VODのみ31秒以上で6秒地点</td>
+                  <td>VOD: 6-60秒 / リニア: Mid・Post</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon tver"><img src="./assets/tver-logo.png" alt="TVer" /></span>TVer</span></td>
+                  <td>SP(TAB)/PC/CTV</td>
+                  <td>可能</td>
+                  <td>不可</td>
+                  <td>6-180秒（局条件あり）</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon dazn"><img src="./assets/dazn-logo.png" alt="DAZN" /></span>DAZN</span></td>
+                  <td>SP(TAB)/CTV</td>
+                  <td>不可</td>
+                  <td>不可</td>
+                  <td>15秒中心 / 31秒以上不可</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon spotv">SP</span>SPOTV</span></td>
+                  <td>SP(TAB)のみ</td>
+                  <td>不可</td>
+                  <td>不可</td>
+                  <td>15秒のみ</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon lemino">Le</span>Lemino</span></td>
+                  <td>SP(TAB)/CTV</td>
+                  <td>不可</td>
+                  <td>不可</td>
+                  <td>6-60秒（61秒以上不可）</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon rch"><img src="./assets/rchannel-logo.png" alt="Rチャンネル" /></span>Rチャンネル</span></td>
+                  <td>ALLデバイス</td>
+                  <td>不可</td>
+                  <td>不可</td>
+                  <td>都度相談〜120秒（121秒以上不可）</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon jsp"><img src="./assets/jsports-logo.png" alt="JSPORTS" /></span>JSPORTS</span></td>
+                  <td>ALLデバイス</td>
+                  <td>不可</td>
+                  <td>不可</td>
+                  <td>都度相談（長尺は要確認）</td>
+                </tr>
+                <tr>
+                  <td><span class="media-cell"><span class="media-icon nico">nico</span>ニコニコ動画</span></td>
+                  <td>PC/SP</td>
+                  <td>可能</td>
+                  <td>1秒以上で可能</td>
+                  <td>6秒以上（制限なし）</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <input id="imageReplaceInput" type="file" accept="image/*" style="display:none" />
+
+  <script>
+    const listView = document.getElementById("listView");
+    const detailView = document.getElementById("detailView");
+    const assortView = document.getElementById("assortView");
+    const crossRuleView = document.getElementById("crossRuleView");
+    const backBtn = document.getElementById("backBtn");
+    const backFromAssortBtn = document.getElementById("backFromAssortBtn");
+    const backFromCrossBtn = document.getElementById("backFromCrossBtn");
+    const assortMenuCard = document.querySelector('[data-menu="assort"]');
+    const crossRuleMenuCard = document.querySelector('[data-menu="cross-rule"]');
+    const assortSelectionStatus = document.getElementById("assortSelectionStatus");
+    const clearAssortSelectionBtn = document.getElementById("clearAssortSelectionBtn");
+
+    const detailTitle = document.getElementById("detailTitle");
+    const detailMediaIcon = document.getElementById("detailMediaIcon");
+    const detailDescription = document.getElementById("detailDescription");
+    const detailChip = document.getElementById("detailChip");
+    const specsBody = document.getElementById("specsBody");
+    const adDetailSection = document.getElementById("adDetailSection");
+    const adDetailPanel = document.getElementById("adDetailPanel");
+    const kpiCards = document.querySelectorAll(".kpi-grid .kpi");
+    const roleSelect = document.getElementById("roleSelect");
+    const editToggleBtn = document.getElementById("editToggleBtn");
+    const editStatus = document.getElementById("editStatus");
+    const editAdvancedPanel = document.getElementById("editAdvancedPanel");
+    const imageReplaceInput = document.getElementById("imageReplaceInput");
+    const imageReplaceButtons = document.querySelectorAll(".image-replace-btn");
+    const genreTileGrid = document.getElementById("genreTileGrid");
+    const addGenreBtn = document.getElementById("addGenreBtn");
+    const removeGenreBtn = document.getElementById("removeGenreBtn");
+    const genreCountInput = document.getElementById("genreCountInput");
+    const applyGenreCountBtn = document.getElementById("applyGenreCountBtn");
+    const abemaUiWidthRange = document.getElementById("abemaUiWidthRange");
+    const abemaUiWidthInput = document.getElementById("abemaUiWidthInput");
+    const hotProgramWidthRange = document.getElementById("hotProgramWidthRange");
+    const hotProgramWidthInput = document.getElementById("hotProgramWidthInput");
+    const creativeColWidthRange = document.getElementById("creativeColWidthRange");
+    const creativeColWidthInput = document.getElementById("creativeColWidthInput");
+    const abemaUiCapture = document.querySelector(".abema-ui-capture");
+    const hotProgramCapture = document.querySelector(".hot-program-capture");
+    const hotProgramLayout = document.querySelector(".hot-program-layout");
+    const inventoryPieEditor = document.getElementById("inventoryPieEditor");
+    const attrPieEditor = document.getElementById("attrPieEditor");
+    const sectionVisibilityControls = document.getElementById("sectionVisibilityControls");
+    const inventoryPanel = document.getElementById("inventoryPanel");
+    const attrPanel = document.getElementById("attrPanel");
+    const specOverviewPanel = document.getElementById("specOverviewPanel");
+    const uiGenrePanel = document.getElementById("uiGenrePanel");
+    const hotProgramWrap = document.getElementById("hotProgramWrap");
+    const creativeDemoPanel = document.getElementById("creativeDemoPanel");
+
+    const mediaDetails = {
+      ABEMA: {
+        title: "ABEMA",
+        icon: { type: "image", src: "./assets/abema-logo.png", alt: "ABEMAロゴ", className: "" },
+        chip: "ALLデバイス",
+        description: "好きな時間に好きな場所で、話題の動画を楽しめる未来のテレビ。ニュース・恋愛・アニメ・スポーツまで幅広く、ALLデバイス配信に対応。",
+        kpis: [
+          { label: "主要指標（2025年9月時点）", value: "2,771万+", sub: "累計アプリダウンロード" },
+          { label: "想定月間UU数", value: "1,200万", sub: "ユニークユーザー数（月間想定）" },
+          { label: "視聴完了率（15秒）", value: "94%", sub: "30秒:94% / 60秒:90%" },
+          { label: "媒体横断ユーザー重複割合", value: "5.6%", sub: "YouTubeとの調査 マクロミルで実施" }
+        ],
+        specs: [
+          ["掲載面", "リニア / VOD"],
+          ["視聴完了率", "15秒: 94% / 30秒: 94% / 60秒: 90%"],
+          ["スキップ", "VODのみ31秒以上で6秒地点から可"],
+          ["再生秒数", "Pre / Mid / Post（6〜60秒）"],
+          ["imp定義", "0%地点再生のみをimpとして計測"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "デバイス全体",
+            gradient: "conic-gradient(var(--accent) 0 67.3%, var(--accent-2) 67.3% 86.1%, var(--accent-3) 86.1% 100%)",
+            legend: [
+              { name: "スマホ", value: "67.3%", color: "var(--accent)" },
+              { name: "CTV", value: "18.8%", color: "var(--accent-2)" },
+              { name: "PC", value: "13.9%", color: "var(--accent-3)" }
+            ]
+          },
+          surface: {
+            centerTitle: "2 : 8",
+            centerSub: "リニア : VOD",
+            gradient: "conic-gradient(#2ba8ff 0 20%, #7f75ff 20% 100%)",
+            legend: [
+              { name: "リニア", value: "20%", color: "#2ba8ff" },
+              { name: "VOD", value: "80%", color: "#7f75ff" }
+            ]
+          }
+        },
+        attr: {
+          gender: {
+            centerTitle: "性別",
+            centerSub: "男性 / 女性",
+            gradient: "conic-gradient(var(--accent) 0 52%, var(--accent-2) 52% 100%)",
+            legend: [
+              { name: "男性", value: "52%", color: "var(--accent)" },
+              { name: "女性", value: "48%", color: "var(--accent-2)" }
+            ]
+          },
+          age: {
+            centerTitle: "年代",
+            centerSub: "20代〜50代",
+            gradient: "conic-gradient(#2ba8ff 0 17.2%, #7f75ff 17.2% 40.4%, #3de4d8 40.4% 59.6%, #ffc36b 59.6% 76.8%, #5a8df2 76.8% 100%)",
+            legend: [
+              { name: "20代", value: "17.2%", color: "#2ba8ff" },
+              { name: "30代", value: "23.2%", color: "#7f75ff" },
+              { name: "40代", value: "19.2%", color: "#3de4d8" },
+              { name: "50代", value: "17.2%", color: "#ffc36b" },
+              { name: "その他", value: "23.2%", color: "#5a8df2" }
+            ]
+          }
+        }
+      },
+      TVer: {
+        title: "TVer",
+        icon: { type: "image", src: "./assets/tver-logo.png", alt: "TVerロゴ", className: "tver" },
+        chip: "ALLデバイス",
+        description: "民放テレビ局がひとつになったプラットフォーム。ドラマ/バラエティ中心に約800番組以上を無料配信し、AJA SSP経由で準キー5局+キー局本店への配信が可能。",
+        kpis: [
+          { label: "月間ユーザー数（MUB）", value: "4,120万", sub: "2026年1月時点" },
+          { label: "累計アプリDL数", value: "9,000万", sub: "2026年1月時点" },
+          { label: "視聴完了率（15秒）", value: "96%", sub: "30秒:95.2% / 60秒:93.4%" },
+          { label: "配信ポジション比率", value: "2:7:1", sub: "Pre : Mid : Post" }
+        ],
+        specs: [
+          ["掲載面", "リアルタイム配信 / キャッチアップ配信"],
+          ["視聴完了率", "15秒:96% / 30秒:95.2% / 60秒:93.4%"],
+          ["クリック", "キー局+準キー局で可能（単価1.1倍）"],
+          ["スキップ", "不可"],
+          ["再生秒数", "Pre/Mid/Postで6-180秒（31秒以上はプレロール除外）"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "ALLデバイス",
+            gradient: "conic-gradient(var(--accent) 0 100%)",
+            legend: [{ name: "ALLデバイス", value: "対応", color: "var(--accent)" }]
+          },
+          surface: {
+            centerTitle: "2 : 7 : 1",
+            centerSub: "Pre : Mid : Post",
+            gradient: "conic-gradient(#2ba8ff 0 20%, #7f75ff 20% 90%, #3de4d8 90% 100%)",
+            legend: [
+              { name: "Pre", value: "20%", color: "#2ba8ff" },
+              { name: "Mid", value: "70%", color: "#7f75ff" },
+              { name: "Post", value: "10%", color: "#3de4d8" }
+            ]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      DAZN: {
+        title: "DAZN",
+        icon: { type: "image", src: "./assets/dazn-logo.png", alt: "DAZNロゴ", className: "dazn" },
+        chip: "SP/CTV",
+        description: "世界最大級のOTTスポーツストリーミングサービス。運用型広告枠ではSP/CTVのみ配信可能で、Jリーグ・野球シーズンで配信量が大きく変動。",
+        kpis: [
+          { label: "配信対象デバイス", value: "SP/CTV", sub: "運用型広告枠はPC在庫なし" },
+          { label: "LIVE再生秒数", value: "15秒", sub: "Preロール固定" },
+          { label: "キャッチアップ秒数", value: "1-30秒", sub: "半端尺可" },
+          { label: "スキップ / クリック", value: "不可", sub: "LIVE/キャッチアップ共通" }
+        ],
+        specs: [
+          ["掲載面", "LIVE面 / キャッチアップ面"],
+          ["再生秒数", "LIVE:15秒 / キャッチアップ:1秒〜30秒（半端尺可）"],
+          ["クリック", "不可（LIVE/キャッチアップ共通）"],
+          ["スキップ", "不可（LIVE/キャッチアップ共通）"],
+          ["ポジション", "Preロール（LIVE/キャッチアップ共通）"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "SP(TAB)/CTV",
+            gradient: "conic-gradient(var(--accent-2) 0 100%)",
+            legend: [{ name: "SP(TAB)/CTV", value: "配信可能", color: "var(--accent-2)" }]
+          },
+          surface: {
+            centerTitle: "LIVE / CU",
+            centerSub: "案件・時期で変動",
+            gradient: "conic-gradient(#2ba8ff 0 50%, #3de4d8 50% 100%)",
+            legend: [
+              { name: "LIVE", value: "15秒", color: "#2ba8ff" },
+              { name: "キャッチアップ", value: "1〜30秒", color: "#3de4d8" }
+            ]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      Lemino: {
+        title: "Lemino",
+        icon: { type: "image", src: "./assets/lemino-logo.png", alt: "Leminoロゴ", className: "lemino" },
+        chip: "SP/CTV",
+        description: "NTTドコモの映像配信サービス。AVODとSVODを提供し、AJA経由では在庫の多いSP/CTVへの配信が可能（PC面は接続テスト中）。",
+        kpis: [
+          { label: "想定MAU", value: "500万", sub: "注目コンテンツ配信時" },
+          { label: "配信デバイス", value: "SP/CTV", sub: "PC面は接続テスト中" },
+          { label: "視聴完了率（15秒）", value: "97.8%", sub: "30秒:95.6%" },
+          { label: "掲載面", value: "VOD", sub: "ハイライト / キャッチアップ / オリジナル" }
+        ],
+        specs: [
+          ["掲載面", "VOD（ハイライト / キャッチアップ / オリジナル）"],
+          ["視聴完了率", "15秒:97.8% / 30秒:95.6%"],
+          ["クリック / スキップ", "クリック不可 / スキップ不可"],
+          ["デバイス", "SP(TAB)/CTV"],
+          ["再生秒数", "Pre:15秒/30秒、Mid:15秒/30秒/60秒"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "SP(TAB)/CTV",
+            gradient: "conic-gradient(var(--accent-2) 0 100%)",
+            legend: [{ name: "SP(TAB)/CTV", value: "配信可能", color: "var(--accent-2)" }]
+          },
+          surface: {
+            centerTitle: "Pre / Mid",
+            centerSub: "VOD面",
+            gradient: "conic-gradient(#2ba8ff 0 50%, #7f75ff 50% 100%)",
+            legend: [
+              { name: "Pre", value: "15秒/30秒", color: "#2ba8ff" },
+              { name: "Mid", value: "15/30/60秒", color: "#7f75ff" }
+            ]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      "Rチャンネル": {
+        title: "Rチャンネル",
+        icon: { type: "image", src: "./assets/rchannel-logo.png", alt: "Rチャンネルロゴ", className: "rch" },
+        chip: "ALLデバイス",
+        description: "楽天が運営する24時間365日視聴可能なリニア型動画配信サービス。無料・会員登録不要で50チャンネルのプロコンテンツを提供。",
+        kpis: [
+          { label: "視聴完了率（15秒）", value: "98.8%", sub: "高完了率" },
+          { label: "配信デバイス", value: "ALL", sub: "ALLデバイス配信可能" },
+          { label: "再生秒数", value: "15-120秒", sub: "半端尺は都度相談" },
+          { label: "配信面", value: "Mid", sub: "LIVE面 / キャッチアップ面" }
+        ],
+        specs: [
+          ["再生秒数", "15秒/30秒/60秒/90秒/120秒（半端尺は都度相談）"],
+          ["クリック / スキップ", "クリック不可 / スキップ不可"],
+          ["デバイス", "ALLデバイス"],
+          ["ポジション", "Mid（LIVE面・キャッチアップ面）"],
+          ["備考", "長尺配信が可能で広告受容度が高い"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "ALLデバイス",
+            gradient: "conic-gradient(var(--accent) 0 100%)",
+            legend: [{ name: "ALLデバイス", value: "配信可能", color: "var(--accent)" }]
+          },
+          surface: {
+            centerTitle: "Mid",
+            centerSub: "LIVE / CU",
+            gradient: "conic-gradient(#3de4d8 0 100%)",
+            legend: [{ name: "Mid", value: "中心", color: "#3de4d8" }]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      JSPORTS: {
+        title: "JSPORTS",
+        icon: { type: "image", src: "./assets/jsports-logo.png", alt: "JSPORTSロゴ", className: "jsp" },
+        chip: "ALLデバイス",
+        description: "年間2,000番組・6,000時間以上のスポーツコンテンツを配信。テレビ放送同様のフォーマットで、プレー中にCM配信しない運用に対応。",
+        kpis: [
+          { label: "年間番組数", value: "2,000+", sub: "年間配信番組" },
+          { label: "年間配信時間", value: "6,000h+", sub: "スポーツコンテンツ" },
+          { label: "配信デバイス", value: "ALL", sub: "ALLデバイス配信可能" },
+          { label: "再生秒数", value: "15/30/60", sub: "長尺・半端尺は都度相談" }
+        ],
+        specs: [
+          ["再生秒数", "15秒/30秒/60秒（長尺・半端尺は都度相談）"],
+          ["クリック / スキップ", "クリック不可 / スキップ不可"],
+          ["デバイス", "ALLデバイス"],
+          ["ポジション", "Mid（LIVE面・キャッチアップ面）"],
+          ["備考", "プレー中のCM配信なし"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "ALLデバイス",
+            gradient: "conic-gradient(var(--accent) 0 100%)",
+            legend: [{ name: "ALLデバイス", value: "配信可能", color: "var(--accent)" }]
+          },
+          surface: {
+            centerTitle: "Mid",
+            centerSub: "LIVE / CU",
+            gradient: "conic-gradient(#7f75ff 0 100%)",
+            legend: [{ name: "Mid", value: "中心", color: "#7f75ff" }]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      SPOTV: {
+        title: "SPOTV",
+        icon: { type: "image", src: "./assets/spotv-logo.png", alt: "SPOTVロゴ", className: "spotv" },
+        chip: "SP(TAB)のみ",
+        description: "MLBを中心に世界最高峰スポーツリーグをライブ配信。AJA経由ではSP(TAB)のみ配信可能。",
+        kpis: [
+          { label: "配信デバイス", value: "SPのみ", sub: "SP(TAB)限定" },
+          { label: "再生秒数", value: "15秒", sub: "LIVE / キャッチアップ共通" },
+          { label: "スキップ / クリック", value: "不可", sub: "共通仕様" },
+          { label: "ポジション", value: "Pre", sub: "Preロール" }
+        ],
+        specs: [
+          ["再生秒数", "15秒（LIVE面・キャッチアップ面とも）"],
+          ["クリック / スキップ", "クリック不可 / スキップ不可"],
+          ["デバイス", "SP(TAB)のみ"],
+          ["ポジション", "Preロール"],
+          ["備考", "MLBなどスポーツ文脈に強い"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "SP(TAB)のみ",
+            gradient: "conic-gradient(var(--accent-3) 0 100%)",
+            legend: [{ name: "SP(TAB)", value: "配信可能", color: "var(--accent-3)" }]
+          },
+          surface: {
+            centerTitle: "Pre",
+            centerSub: "単一ポジション",
+            gradient: "conic-gradient(#3de4d8 0 100%)",
+            legend: [{ name: "Pre", value: "100%", color: "#3de4d8" }]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      },
+      "ニコニコ動画": {
+        title: "ニコニコ動画",
+        icon: { type: "badge", label: "nico", alt: "ニコニコ動画", className: "nico" },
+        chip: "PC/SP",
+        description: "コメント機能による高いエンゲージメントを持つ国内最大級UGCプラットフォーム。PC/SPブラウザ&アプリで配信可能。",
+        kpis: [
+          { label: "配信デバイス", value: "PC / SP", sub: "ブラウザ&アプリ" },
+          { label: "再生秒数", value: "6秒以上", sub: "制限なし" },
+          { label: "スキップ", value: "1秒〜可", sub: "スキッパブル配信" },
+          { label: "ポジション", value: "Pre / Post", sub: "インストリームPMP" }
+        ],
+        specs: [
+          ["掲載面", "UGC動画インストリームビデオPMP"],
+          ["再生秒数", "6秒以上（制限なし）"],
+          ["クリック", "可能"],
+          ["スキップ", "1秒以上から可能"],
+          ["ポジション", "Pre / Post"]
+        ],
+        inventory: {
+          device: {
+            centerTitle: "100%",
+            centerSub: "PC / SP",
+            gradient: "conic-gradient(#2ba8ff 0 50%, #7f75ff 50% 100%)",
+            legend: [
+              { name: "PC", value: "対応", color: "#2ba8ff" },
+              { name: "SP", value: "対応", color: "#7f75ff" }
+            ]
+          },
+          surface: {
+            centerTitle: "Pre / Post",
+            centerSub: "2ポジション",
+            gradient: "conic-gradient(#3de4d8 0 50%, #5a8df2 50% 100%)",
+            legend: [
+              { name: "Pre", value: "対応", color: "#3de4d8" },
+              { name: "Post", value: "対応", color: "#5a8df2" }
+            ]
+          }
+        },
+        attr: {
+          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
+          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+        }
+      }
+    };
+
+    let currentMedia = "ABEMA";
+    let currentInventoryTab = "device";
+    let currentAttrTab = "gender";
+    let isEditMode = false;
+    const mediaSectionVisibility = {};
+    const defaultSectionVisibility = {
+      inventory: true,
+      attr: true,
+      specOverview: true,
+      adDetail: true,
+      uiGenre: true,
+      hotProgram: true,
+      creativeDemo: true
+    };
+    const sectionDefs = {
+      inventory: { label: "在庫構成比", getEl: () => inventoryPanel },
+      attr: { label: "利用者属性", getEl: () => attrPanel },
+      specOverview: { label: "広告仕様概要", getEl: () => specOverviewPanel },
+      adDetail: { label: "広告仕様詳細", getEl: () => adDetailPanel },
+      uiGenre: { label: "画面UIとジャンル", getEl: () => uiGenrePanel },
+      hotProgram: { label: "Hot Program", getEl: () => hotProgramWrap },
+      creativeDemo: { label: "クリエイティブデモ", getEl: () => creativeDemoPanel }
+    };
+
+    function getEditableTargets() {
+      return document.querySelectorAll(
+        "#detailView .media-title, #detailView #detailDescription, #detailView .kpi .label, #detailView .kpi .value, #detailView .kpi .sub, #detailView .panel h3, #detailView .table td, #detailView .table th, #detailView .genre-tile, #crossRuleView .media-title, #crossRuleView .hero p, #crossRuleView .table td, #crossRuleView .table th"
+      );
+    }
+
+    function getCanAdvancedEdit() {
+      return roleSelect.value === "AJA" && isEditMode;
+    }
+
+    function ensureSectionVisibility(mediaKey) {
+      if (!mediaSectionVisibility[mediaKey]) {
+        mediaSectionVisibility[mediaKey] = { ...defaultSectionVisibility };
+      }
+      return mediaSectionVisibility[mediaKey];
+    }
+
+    function renderSectionVisibilityControls() {
+      const vis = ensureSectionVisibility(currentMedia);
+      const canEdit = getCanAdvancedEdit();
+      sectionVisibilityControls.innerHTML = Object.entries(sectionDefs)
+        .map(([key, def]) =>
+          `<label class="toggle-item"><input type="checkbox" data-section-key="${key}" ${vis[key] ? "checked" : ""} ${canEdit ? "" : "disabled"} /><span>${def.label}</span></label>`
+        )
+        .join("");
+    }
+
+    function setDisplayByFlag(el, shouldShow) {
+      if (!el) return;
+      el.style.display = shouldShow ? "" : "none";
+    }
+
+    function applySectionVisibility() {
+      const vis = ensureSectionVisibility(currentMedia);
+      setDisplayByFlag(inventoryPanel, vis.inventory);
+      setDisplayByFlag(attrPanel, vis.attr);
+      setDisplayByFlag(specOverviewPanel, vis.specOverview);
+      const showAdDetailBase = currentMedia === "ABEMA";
+      setDisplayByFlag(adDetailPanel, showAdDetailBase && vis.adDetail);
+      setDisplayByFlag(uiGenrePanel, vis.uiGenre);
+      setDisplayByFlag(hotProgramWrap, vis.uiGenre && vis.hotProgram);
+      setDisplayByFlag(creativeDemoPanel, vis.uiGenre && vis.hotProgram && vis.creativeDemo);
+    }
+
+    function parsePercent(value) {
+      const n = parseFloat(String(value).replace(/[^0-9.]/g, ""));
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function buildGradientFromLegend(legend, fallbackGradient) {
+      const nums = legend.map((item) => parsePercent(item.value));
+      if (nums.some((n) => Number.isNaN(n))) return fallbackGradient;
+      const total = nums.reduce((a, b) => a + b, 0);
+      if (total <= 0) return fallbackGradient;
+      let cursor = 0;
+      const segments = legend.map((item, idx) => {
+        const ratio = (nums[idx] / total) * 100;
+        const start = cursor;
+        const end = cursor + ratio;
+        cursor = end;
+        return `${item.color} ${start.toFixed(2)}% ${end.toFixed(2)}%`;
+      });
+      return `conic-gradient(${segments.join(", ")})`;
+    }
+
+    function renderPieEditor(container, dataType, tabKey, legend) {
+      if (!container) return;
+      const canEdit = getCanAdvancedEdit();
+      const hasNumeric = legend.every((item) => !Number.isNaN(parsePercent(item.value)));
+      if (!hasNumeric) {
+        container.innerHTML = `<div class="edit-control-row"><span class="edit-status">${tabKey} は数値編集対象外です</span></div>`;
+        return;
+      }
+      container.innerHTML = legend
+        .map((item, idx) => {
+          const v = parsePercent(item.value);
+          return `<label class="pie-editor-row"><span>${item.name}</span><input class="edit-input pie-value-input" type="number" min="0" step="0.1" value="${v}" data-type="${dataType}" data-tab="${tabKey}" data-index="${idx}" ${canEdit ? "" : "disabled"} /></label>`;
+        })
+        .join("");
+    }
+
+    function renderPieEditors() {
+      const invLegend = mediaDetails[currentMedia].inventory[currentInventoryTab].legend;
+      const attrLegendData = mediaDetails[currentMedia].attr[currentAttrTab].legend;
+      renderPieEditor(inventoryPieEditor, "inventory", currentInventoryTab, invLegend);
+      renderPieEditor(attrPieEditor, "attr", currentAttrTab, attrLegendData);
+    }
+
+    function syncGenreCount() {
+      genreCountInput.value = genreTileGrid.querySelectorAll(".genre-tile").length;
+    }
+
+    function createGenreTile(label = "新規ジャンル") {
+      const tile = document.createElement("div");
+      tile.className = "genre-tile";
+      tile.textContent = label;
+      return tile;
+    }
+
+    function setGenreCount(targetCount) {
+      const safeCount = Math.max(1, Math.min(30, targetCount));
+      const current = genreTileGrid.querySelectorAll(".genre-tile").length;
+      if (safeCount > current) {
+        for (let i = current; i < safeCount; i += 1) {
+          genreTileGrid.appendChild(createGenreTile());
+        }
+      } else if (safeCount < current) {
+        for (let i = current; i > safeCount; i -= 1) {
+          genreTileGrid.lastElementChild?.remove();
+        }
+      }
+      syncGenreCount();
+      applyEditModeState();
+    }
+
+    function applyEditModeState() {
+      const isAja = roleSelect.value === "AJA";
+      const canEdit = isAja && isEditMode;
+      getEditableTargets().forEach((el) => {
+        el.setAttribute("contenteditable", canEdit ? "true" : "false");
+        el.classList.toggle("is-editing", canEdit);
+      });
+      editToggleBtn.disabled = !isAja;
+      editToggleBtn.textContent = canEdit ? "編集モードOFF" : "編集モードON";
+      editAdvancedPanel.style.display = canEdit ? "block" : "none";
+      renderPieEditors();
+      renderSectionVisibilityControls();
+      if (!isAja) {
+        editStatus.textContent = "現在: Buyer権限（閲覧のみ）";
+      } else {
+        editStatus.textContent = canEdit ? "現在: 編集モード（AJA）" : "現在: 閲覧モード";
+      }
+    }
+
+    function applyMediaDetail(mediaKey) {
+      const selectedMedia = mediaDetails[mediaKey];
+      if (!selectedMedia) return;
+      currentMedia = mediaKey;
+      const icon = selectedMedia.icon;
+      detailMediaIcon.className = `media-icon detail-media-icon ${icon.className || ""}`;
+      if (icon.type === "image") {
+        detailMediaIcon.innerHTML = `<img src="${icon.src}" alt="${icon.alt}">`;
+      } else {
+        detailMediaIcon.textContent = icon.label;
+      }
+      detailTitle.textContent = selectedMedia.title;
+      detailDescription.textContent = selectedMedia.description;
+      detailChip.textContent = selectedMedia.chip;
+
+      selectedMedia.kpis.forEach((item, idx) => {
+        const targetCard = kpiCards[idx];
+        if (!targetCard) return;
+        targetCard.querySelector(".label").textContent = item.label;
+        targetCard.querySelector(".value").textContent = item.value;
+        targetCard.querySelector(".sub").textContent = item.sub;
+      });
+
+      specsBody.innerHTML = selectedMedia.specs
+        .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`)
+        .join("");
+
+      renderInventory(currentInventoryTab);
+      renderAttr(currentAttrTab);
+      applySectionVisibility();
+      applyEditModeState();
+    }
+
+    document.querySelectorAll(".media-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const mediaKey = card.dataset.media;
+        if (mediaDetails[mediaKey]) {
+          applyMediaDetail(mediaKey);
+          listView.classList.add("hidden");
+          assortView.classList.remove("active");
+          crossRuleView.classList.remove("active");
+          detailView.classList.add("active");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+    });
+
+    backBtn.addEventListener("click", () => {
+      detailView.classList.remove("active");
+      listView.classList.remove("hidden");
+    });
+
+    assortMenuCard.addEventListener("click", () => {
+      listView.classList.add("hidden");
+      detailView.classList.remove("active");
+      crossRuleView.classList.remove("active");
+      assortView.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    backFromAssortBtn.addEventListener("click", () => {
+      assortView.classList.remove("active");
+      listView.classList.remove("hidden");
+    });
+
+    crossRuleMenuCard.addEventListener("click", () => {
+      listView.classList.add("hidden");
+      detailView.classList.remove("active");
+      assortView.classList.remove("active");
+      crossRuleView.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    backFromCrossBtn.addEventListener("click", () => {
+      crossRuleView.classList.remove("active");
+      listView.classList.remove("hidden");
+    });
+
+    const inventoryDonut = document.getElementById("inventoryDonut");
+    const inventoryLegend = document.getElementById("inventoryLegend");
+    const inventoryCenter = document.getElementById("inventoryCenter");
+    const inventoryTabs = document.querySelectorAll(".tab-btn[data-inv]");
+
+    function renderInventory(type) {
+      const selected = mediaDetails[currentMedia].inventory[type];
+      const dynamicGradient = buildGradientFromLegend(selected.legend, selected.gradient);
+      inventoryDonut.style.background = dynamicGradient;
+      inventoryCenter.innerHTML = `<strong>${selected.centerTitle}</strong>${selected.centerSub}`;
+      inventoryLegend.innerHTML = selected.legend
+        .map((item) =>
+          `<div class="legend-item"><span class="dot" style="background:${item.color}"></span><span>${item.name}</span><span>${item.value}</span></div>`
+        )
+        .join("");
+    }
+
+    inventoryTabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        inventoryTabs.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentInventoryTab = btn.dataset.inv;
+        renderInventory(currentInventoryTab);
+        renderPieEditors();
+      });
+    });
+
+    const attrDonut = document.getElementById("attrDonut");
+    const attrLegend = document.getElementById("attrLegend");
+    const attrCenter = document.getElementById("attrCenter");
+    const attrTabs = document.querySelectorAll(".tab-btn[data-attr]");
+
+    function renderAttr(type) {
+      const selected = mediaDetails[currentMedia].attr[type];
+      const dynamicGradient = buildGradientFromLegend(selected.legend, selected.gradient);
+      attrDonut.style.background = dynamicGradient;
+      attrCenter.innerHTML = `<strong>${selected.centerTitle}</strong>${selected.centerSub}`;
+      attrLegend.innerHTML = selected.legend
+        .map((item) =>
+          `<div class="legend-item"><span class="dot" style="background:${item.color}"></span><span>${item.name}</span><span>${item.value}</span></div>`
+        )
+        .join("");
+    }
+
+    attrTabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        attrTabs.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentAttrTab = btn.dataset.attr;
+        renderAttr(currentAttrTab);
+        renderPieEditors();
+      });
+    });
+
+    editToggleBtn.addEventListener("click", () => {
+      if (roleSelect.value !== "AJA") return;
+      isEditMode = !isEditMode;
+      applyEditModeState();
+    });
+
+    roleSelect.addEventListener("change", () => {
+      if (roleSelect.value !== "AJA") {
+        isEditMode = false;
+      }
+      applyEditModeState();
+    });
+
+    let pendingImageTargetId = "";
+    imageReplaceButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!getCanAdvancedEdit()) return;
+        pendingImageTargetId = btn.dataset.targetImage || "";
+        imageReplaceInput.click();
+      });
+    });
+    imageReplaceInput.addEventListener("change", (e) => {
+      if (!getCanAdvancedEdit() || !pendingImageTargetId) return;
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const target = document.getElementById(pendingImageTargetId);
+        if (target && typeof reader.result === "string") {
+          target.src = reader.result;
+        }
+      };
+      reader.readAsDataURL(file);
+      imageReplaceInput.value = "";
+      pendingImageTargetId = "";
+    });
+
+    function applyAbemaUiWidth(value) {
+      const v = Math.max(40, Math.min(100, Number(value)));
+      abemaUiWidthRange.value = String(v);
+      abemaUiWidthInput.value = String(v);
+      abemaUiCapture.style.maxWidth = `${v}%`;
+    }
+    function applyHotProgramWidth(value) {
+      const v = Math.max(460, Math.min(1100, Number(value)));
+      hotProgramWidthRange.value = String(v);
+      hotProgramWidthInput.value = String(v);
+      hotProgramCapture.style.maxWidth = `${v}px`;
+    }
+    function applyCreativeColWidth(value) {
+      const v = Math.max(280, Math.min(520, Number(value)));
+      creativeColWidthRange.value = String(v);
+      creativeColWidthInput.value = String(v);
+      hotProgramLayout.style.gridTemplateColumns = `minmax(0, 1fr) ${v}px`;
+    }
+
+    abemaUiWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyAbemaUiWidth(abemaUiWidthRange.value); });
+    abemaUiWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyAbemaUiWidth(abemaUiWidthInput.value); });
+    hotProgramWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyHotProgramWidth(hotProgramWidthRange.value); });
+    hotProgramWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyHotProgramWidth(hotProgramWidthInput.value); });
+    creativeColWidthRange.addEventListener("input", () => { if (getCanAdvancedEdit()) applyCreativeColWidth(creativeColWidthRange.value); });
+    creativeColWidthInput.addEventListener("change", () => { if (getCanAdvancedEdit()) applyCreativeColWidth(creativeColWidthInput.value); });
+
+    addGenreBtn.addEventListener("click", () => {
+      if (!getCanAdvancedEdit()) return;
+      genreTileGrid.appendChild(createGenreTile());
+      syncGenreCount();
+      applyEditModeState();
+    });
+    removeGenreBtn.addEventListener("click", () => {
+      if (!getCanAdvancedEdit()) return;
+      if (genreTileGrid.querySelectorAll(".genre-tile").length <= 1) return;
+      genreTileGrid.lastElementChild?.remove();
+      syncGenreCount();
+    });
+    applyGenreCountBtn.addEventListener("click", () => {
+      if (!getCanAdvancedEdit()) return;
+      setGenreCount(Number(genreCountInput.value));
+    });
+
+    function updateAssortSelectionStatus() {
+      const count = document.querySelectorAll("#assortView .segment-option.active").length;
+      assortSelectionStatus.textContent = `選択中: ${count}件`;
+    }
+    document.querySelectorAll("#assortView .segment-option").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.classList.toggle("active");
+        updateAssortSelectionStatus();
+      });
+    });
+    clearAssortSelectionBtn.addEventListener("click", () => {
+      document.querySelectorAll("#assortView .segment-option.active").forEach((btn) => btn.classList.remove("active"));
+      updateAssortSelectionStatus();
+    });
+
+    sectionVisibilityControls.addEventListener("change", (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      if (target.type !== "checkbox") return;
+      if (!getCanAdvancedEdit()) return;
+      const key = target.dataset.sectionKey;
+      if (!key || !sectionDefs[key]) return;
+      const vis = ensureSectionVisibility(currentMedia);
+      vis[key] = target.checked;
+      applySectionVisibility();
+    });
+
+    document.addEventListener("input", (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      if (!target.classList.contains("pie-value-input")) return;
+      if (!getCanAdvancedEdit()) return;
+      const dataType = target.dataset.type;
+      const tab = target.dataset.tab;
+      const idx = Number(target.dataset.index);
+      const val = Number(target.value);
+      if (!Number.isFinite(val) || val < 0) return;
+
+      if (dataType === "inventory") {
+        const legend = mediaDetails[currentMedia].inventory[tab].legend;
+        if (!legend[idx]) return;
+        legend[idx].value = `${val}%`;
+        if (tab === currentInventoryTab) renderInventory(currentInventoryTab);
+      }
+      if (dataType === "attr") {
+        const legend = mediaDetails[currentMedia].attr[tab].legend;
+        if (!legend[idx]) return;
+        legend[idx].value = `${val}%`;
+        if (tab === currentAttrTab) renderAttr(currentAttrTab);
+      }
+    });
+
+    applyMediaDetail("ABEMA");
+    updateAssortSelectionStatus();
+    applyAbemaUiWidth(100);
+    applyHotProgramWidth(760);
+    applyCreativeColWidth(380);
+    syncGenreCount();
+    applyEditModeState();
+  </script>
+</body>
+</html>
