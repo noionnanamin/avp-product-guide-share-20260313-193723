@@ -856,6 +856,53 @@
       max-width: 420px;
       margin-left: auto;
     }
+    .genre-bar-chart {
+      width: 100%;
+      max-width: 420px;
+      margin-left: auto;
+      border: 1px solid rgba(83, 120, 170, 0.18);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+    }
+    .genre-bar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #2f4f78;
+      font-weight: 800;
+    }
+    .genre-bar-list {
+      display: grid;
+      gap: 8px;
+    }
+    .genre-bar-row {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) 44px;
+      gap: 8px;
+      align-items: center;
+    }
+    .genre-bar-label,
+    .genre-bar-value {
+      font-size: 12px;
+      color: #2f4f78;
+      font-weight: 700;
+    }
+    .genre-bar-track {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #edf4ff;
+      overflow: hidden;
+    }
+    .genre-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2ba8ff, #7f75ff);
+    }
     .genre-tile {
       border-radius: 10px;
       padding: 12px 10px;
@@ -1552,6 +1599,10 @@
                 <div class="genre-tile">バラエティ</div>
                 <div class="genre-tile">スポーツ</div>
               </div>
+              <div id="genreBarChart" class="genre-bar-chart" style="display:none;">
+                <h4 id="genreBarTitle" class="genre-bar-title">視聴されているコンテンツ（%）</h4>
+                <div id="genreBarList" class="genre-bar-list"></div>
+              </div>
             </div>
 
           </article>
@@ -1818,6 +1869,9 @@
     const imageReplaceInput = document.getElementById("imageReplaceInput");
     const imageReplaceButtons = document.querySelectorAll(".image-replace-btn");
     const genreTileGrid = document.getElementById("genreTileGrid");
+    const genreBarChart = document.getElementById("genreBarChart");
+    const genreBarTitle = document.getElementById("genreBarTitle");
+    const genreBarList = document.getElementById("genreBarList");
     const addGenreBtn = document.getElementById("addGenreBtn");
     const removeGenreBtn = document.getElementById("removeGenreBtn");
     const genreCountInput = document.getElementById("genreCountInput");
@@ -1970,6 +2024,17 @@
       DAZN: {
         title: "DAZN",
         icon: { type: "image", src: "./assets/dazn-logo.png", alt: "DAZNロゴ", className: "dazn" },
+        uiImage: { src: "./assets/dazn-ui-capture.png", alt: "DAZNの画面UIキャプチャ" },
+        uiImageSecondary: null,
+        genreChartTitle: "視聴されているコンテンツ（%）",
+        genreBars: [
+          { name: "Jリーグ", value: 61 },
+          { name: "野球", value: 49 },
+          { name: "欧州サッカー", value: 33 },
+          { name: "F1", value: 16 },
+          { name: "テニス", value: 11 },
+          { name: "Bリーグ", value: 10 }
+        ],
         chip: "SP/CTV",
         description: "世界最大級のOTTスポーツストリーミングサービス。運用型広告枠ではSP/CTVのみ配信可能で、Jリーグ・野球シーズンで配信量が大きく変動。",
         kpis: [
@@ -2036,9 +2101,9 @@
         description: "NTTドコモの映像配信サービス。AVODとSVODを提供し、AJA経由では在庫の多いSP/CTVへの配信が可能（PC面は接続テスト中）。",
         kpis: [
           { label: "想定MAU", value: "500万", sub: "注目コンテンツ配信時" },
-          { label: "配信デバイス", value: "SP/CTV", sub: "PC面は接続テスト中" },
           { label: "視聴完了率（15秒）", value: "97.8%", sub: "30秒:95.6%" },
-          { label: "掲載面", value: "VOD", sub: "ハイライト / キャッチアップ / オリジナル" }
+          { label: "配信コンテンツ", value: "18万作品", sub: "" },
+          { label: "ドコモユーザー還元率", value: "20%", sub: "最大20%のdポイントとして付与" }
         ],
         specs: [
           ["掲載面", "VOD（ハイライト / キャッチアップ / オリジナル）"],
@@ -2521,6 +2586,7 @@
       const uiImage = selectedMedia.uiImage || mediaDetails.ABEMA.uiImage;
       detailUiImage.src = uiImage.src;
       detailUiImage.alt = uiImage.alt;
+      detailUiImage.style.width = mediaKey === "DAZN" ? "min(100%, 620px)" : "min(100%, 220px)";
       const uiImageSecondary = selectedMedia.uiImageSecondary;
       if (uiImageSecondary) {
         secondaryUiImage.src = uiImageSecondary.src;
@@ -2528,6 +2594,21 @@
         secondaryUiCapture.style.display = "flex";
       } else {
         secondaryUiCapture.style.display = "none";
+      }
+      if (Array.isArray(selectedMedia.genreBars) && selectedMedia.genreBars.length > 0) {
+        genreTileGrid.style.display = "none";
+        genreBarChart.style.display = "block";
+        genreBarTitle.textContent = selectedMedia.genreChartTitle || "視聴されているコンテンツ（%）";
+        genreBarList.innerHTML = selectedMedia.genreBars
+          .map((item) => {
+            const safe = Math.max(0, Math.min(100, Number(item.value) || 0));
+            return `<div class="genre-bar-row"><span class="genre-bar-label">${item.name}</span><div class="genre-bar-track"><span class="genre-bar-fill" style="width:${safe}%;"></span></div><span class="genre-bar-value">${safe}%</span></div>`;
+          })
+          .join("");
+      } else {
+        genreTileGrid.style.display = "grid";
+        genreBarChart.style.display = "none";
+        genreBarList.innerHTML = "";
       }
 
       selectedMedia.kpis.forEach((item, idx) => {
