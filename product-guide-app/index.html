@@ -592,6 +592,13 @@
       text-shadow: none;
       line-height: 1.1;
     }
+    .kpi .value .kpi-unit {
+      font-size: 0.62em;
+      font-weight: 700;
+      color: #5f7698;
+      letter-spacing: 0;
+      vertical-align: baseline;
+    }
     .kpi .sub {
       margin-top: 6px;
       font-size: 12px;
@@ -621,6 +628,12 @@
       grid-template-columns: 170px minmax(0, 1fr);
       align-items: center;
       gap: 14px;
+    }
+    .inventory-note {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #5f7698;
     }
     .donut {
       width: 170px;
@@ -809,16 +822,31 @@
       gap: 16px;
       align-items: start;
     }
+    .ui-capture-row {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
     .abema-ui-capture {
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid rgba(83, 120, 170, 0.18);
       background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 8px;
     }
     .abema-ui-capture img {
       display: block;
-      width: 100%;
+      width: min(100%, 220px);
       height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .abema-ui-capture.secondary img {
+      width: min(100%, 520px);
     }
     .genre-tile-grid {
       display: grid;
@@ -1087,6 +1115,7 @@
       .panel.chart { grid-column: span 6; }
       .panel.specs, .panel.genre { grid-column: span 12; }
       .genre-layout { grid-template-columns: minmax(0, 1fr) 360px; }
+      .ui-capture-row { grid-template-columns: 200px minmax(0, 1fr); }
       .genre-tile { font-size: 15px; }
     }
     @media (max-width: 900px) {
@@ -1134,6 +1163,7 @@
         grid-template-columns: 1fr;
       }
       .genre-layout { grid-template-columns: 1fr; }
+      .ui-capture-row { grid-template-columns: 1fr; }
       .genre-tile-grid {
         max-width: none;
         margin-left: 0;
@@ -1199,7 +1229,7 @@
             </div>
             <div class="edit-control-row">
               <span>項目数</span>
-              <input id="genreCountInput" class="edit-input" type="number" min="1" max="30" value="12" />
+              <input id="genreCountInput" class="edit-input" type="number" min="1" max="30" value="4" />
               <button id="applyGenreCountBtn" class="edit-btn secondary" type="button">適用</button>
             </div>
             <div class="edit-control-row"><span class="edit-status">ジャンル名はタイルを直接クリックして編集</span></div>
@@ -1396,6 +1426,7 @@
                 <div class="legend-item"><span class="dot" style="background:var(--accent-3)"></span><span>PC</span><span>13.9%</span></div>
               </div>
             </div>
+            <p class="inventory-note" id="inventoryNote"></p>
           </article>
 
           <article id="attrPanel" class="card panel chart">
@@ -1507,22 +1538,19 @@
           <article id="uiGenrePanel" class="card panel full">
             <h3>画面UIとジャンル</h3>
             <div class="genre-layout">
-              <div class="abema-ui-capture">
-                <img id="abemaUiImage" src="./assets/abema-ui-capture.png" alt="ABEMAの画面UIキャプチャ" />
+              <div class="ui-capture-row">
+                <div class="abema-ui-capture primary">
+                  <img id="abemaUiImage" src="./assets/abema-ui-capture.png" alt="ABEMAの画面UIキャプチャ" />
+                </div>
+                <div class="abema-ui-capture secondary" id="secondaryUiCapture" style="display:none;">
+                  <img id="secondaryUiImage" src="./assets/tver-ui-capture-wide.png" alt="TVerの画面UIキャプチャ（ワイド）" />
+                </div>
               </div>
               <div id="genreTileGrid" class="genre-tile-grid">
-                <div class="genre-tile">MUSIC</div>
-                <div class="genre-tile">HIP HOP</div>
                 <div class="genre-tile">ドラマ</div>
-                <div class="genre-tile">SPORTS</div>
-                <div class="genre-tile">映画</div>
                 <div class="genre-tile">アニメ</div>
-                <div class="genre-tile">麻雀</div>
-                <div class="genre-tile">将棋</div>
-                <div class="genre-tile">news</div>
-                <div class="genre-tile">韓国・中国</div>
-                <div class="genre-tile">恋愛・リアリティ</div>
-                <div class="genre-tile">K-POP</div>
+                <div class="genre-tile">バラエティ</div>
+                <div class="genre-tile">スポーツ</div>
               </div>
             </div>
 
@@ -1777,6 +1805,9 @@
     const specsBody = document.getElementById("specsBody");
     const regulationBody = document.getElementById("regulationBody");
     const regulationToggleBtn = document.getElementById("regulationToggleBtn");
+    const detailUiImage = document.getElementById("abemaUiImage");
+    const secondaryUiCapture = document.getElementById("secondaryUiCapture");
+    const secondaryUiImage = document.getElementById("secondaryUiImage");
     const adDetailSection = document.getElementById("adDetailSection");
     const adDetailPanel = document.getElementById("adDetailPanel");
     const kpiCards = document.querySelectorAll(".kpi-grid .kpi");
@@ -1796,6 +1827,7 @@
     const abemaUiCapture = document.querySelector(".abema-ui-capture");
     const inventoryPieEditor = document.getElementById("inventoryPieEditor");
     const attrPieEditor = document.getElementById("attrPieEditor");
+    const inventoryNote = document.getElementById("inventoryNote");
     const sectionVisibilityControls = document.getElementById("sectionVisibilityControls");
     const inventoryPanel = document.getElementById("inventoryPanel");
     const attrPanel = document.getElementById("attrPanel");
@@ -1807,6 +1839,8 @@
       ABEMA: {
         title: "ABEMA",
         icon: { type: "image", src: "./assets/abema-logo.png", alt: "ABEMAロゴ", className: "" },
+        uiImage: { src: "./assets/abema-ui-capture.png", alt: "ABEMAの画面UIキャプチャ" },
+        uiImageSecondary: null,
         chip: "ALLデバイス",
         description: "好きな時間に好きな場所で、話題の動画を楽しめる未来のテレビ。ニュース・恋愛・アニメ・スポーツまで幅広く、ALLデバイス配信に対応。",
         kpis: [
@@ -1870,27 +1904,34 @@
       TVer: {
         title: "TVer",
         icon: { type: "image", src: "./assets/tver-logo.png", alt: "TVerロゴ", className: "tver" },
+        uiImage: { src: "./assets/tver-ui-capture.png", alt: "TVerの画面UIキャプチャ" },
+        uiImageSecondary: { src: "./assets/tver-ui-capture-wide.png", alt: "TVerの画面UIキャプチャ（ワイド）" },
         chip: "ALLデバイス",
         description: "民放テレビ局がひとつになったプラットフォーム。ドラマ/バラエティ中心に約800番組以上を無料配信し、AJA SSP経由で準キー5局+キー局本店への配信が可能。",
         kpis: [
           { label: "月間ユーザー数（MUB）", value: "4,120万", sub: "2026年1月時点" },
           { label: "累計アプリDL数", value: "9,000万", sub: "2026年1月時点" },
           { label: "視聴完了率（15秒）", value: "96%", sub: "30秒:95.2% / 60秒:93.4%" },
-          { label: "配信ポジション比率", value: "2:7:1", sub: "Pre : Mid : Post" }
+          { label: "月間再生数", value: "6億5,000万回再生", sub: "2025年調査" }
         ],
         specs: [
           ["掲載面", "リアルタイム配信 / キャッチアップ配信"],
           ["視聴完了率", "15秒:96% / 30秒:95.2% / 60秒:93.4%"],
-          ["クリック", "キー局+準キー局で可能（単価1.1倍）"],
+          ["クリック", "準キー局のみ（単価1.1倍）"],
           ["スキップ", "不可"],
           ["再生秒数", "Pre/Mid/Postで6-180秒（31秒以上はプレロール除外）"]
         ],
         inventory: {
           device: {
             centerTitle: "100%",
-            centerSub: "ALLデバイス",
-            gradient: "conic-gradient(var(--accent) 0 100%)",
-            legend: [{ name: "ALLデバイス", value: "対応", color: "var(--accent)" }]
+            centerSub: "デバイス構成",
+            note: "※PMP配信ではPCなしでSP/CTVのみ",
+            gradient: "conic-gradient(var(--accent) 0 33%, var(--accent-2) 33% 46%, var(--accent-3) 46% 100%)",
+            legend: [
+              { name: "SP", value: "33%", color: "var(--accent)" },
+              { name: "PC", value: "13%", color: "var(--accent-2)" },
+              { name: "CTV", value: "55%", color: "var(--accent-3)" }
+            ]
           },
           surface: {
             centerTitle: "2 : 7 : 1",
@@ -1904,8 +1945,26 @@
           }
         },
         attr: {
-          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
-          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+          gender: {
+            centerTitle: "性別",
+            centerSub: "女性 / 男性",
+            gradient: "conic-gradient(var(--accent-2) 0 60%, var(--accent) 60% 100%)",
+            legend: [
+              { name: "女性", value: "60%", color: "var(--accent-2)" },
+              { name: "男性", value: "40%", color: "var(--accent)" }
+            ]
+          },
+          age: {
+            centerTitle: "年代",
+            centerSub: "15-64歳",
+            gradient: "conic-gradient(#2ba8ff 0 9%, #7f75ff 9% 36%, #3de4d8 36% 70%, #ffc36b 70% 100%)",
+            legend: [
+              { name: "15-19歳", value: "9%", color: "#2ba8ff" },
+              { name: "20-34歳", value: "27%", color: "#7f75ff" },
+              { name: "35-49歳", value: "34%", color: "#3de4d8" },
+              { name: "50-64歳", value: "30%", color: "#ffc36b" }
+            ]
+          }
         }
       },
       DAZN: {
@@ -1914,10 +1973,10 @@
         chip: "SP/CTV",
         description: "世界最大級のOTTスポーツストリーミングサービス。運用型広告枠ではSP/CTVのみ配信可能で、Jリーグ・野球シーズンで配信量が大きく変動。",
         kpis: [
-          { label: "配信対象デバイス", value: "SP/CTV", sub: "運用型広告枠はPC在庫なし" },
-          { label: "LIVE再生秒数", value: "15秒", sub: "Preロール固定" },
-          { label: "キャッチアップ秒数", value: "1-30秒", sub: "半端尺可" },
-          { label: "スキップ / クリック", value: "不可", sub: "LIVE/キャッチアップ共通" }
+          { label: "サービス認知度", value: "72%", sub: "業界トップ" },
+          { label: "配信コンテンツ数", value: "11,500+", sub: "多彩なスポーツジャンル" },
+          { label: "総配信時間", value: "2億2,000万時間", sub: "2022年調査" },
+          { label: "グローバルサービス展開国", value: "200カ国", sub: "" }
         ],
         specs: [
           ["掲載面", "LIVE面 / キャッチアップ面"],
@@ -1929,9 +1988,13 @@
         inventory: {
           device: {
             centerTitle: "100%",
-            centerSub: "SP(TAB)/CTV",
-            gradient: "conic-gradient(var(--accent-2) 0 100%)",
-            legend: [{ name: "SP(TAB)/CTV", value: "配信可能", color: "var(--accent-2)" }]
+            centerSub: "デバイス構成",
+            gradient: "conic-gradient(var(--accent) 0 54%, var(--accent-2) 54% 64%, var(--accent-3) 64% 100%)",
+            legend: [
+              { name: "SP", value: "54%", color: "var(--accent)" },
+              { name: "PC", value: "10%", color: "var(--accent-2)" },
+              { name: "CTV", value: "36%", color: "var(--accent-3)" }
+            ]
           },
           surface: {
             centerTitle: "LIVE / CU",
@@ -1944,8 +2007,26 @@
           }
         },
         attr: {
-          gender: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent)" }] },
-          age: { centerTitle: "属性", centerSub: "公開データ準備中", gradient: "conic-gradient(var(--accent-2) 0 100%)", legend: [{ name: "公開データ", value: "準備中", color: "var(--accent-2)" }] }
+          gender: {
+            centerTitle: "性別",
+            centerSub: "男性 / 女性",
+            gradient: "conic-gradient(var(--accent) 0 73%, var(--accent-2) 73% 100%)",
+            legend: [
+              { name: "女性", value: "27%", color: "var(--accent-2)" },
+              { name: "男性", value: "73%", color: "var(--accent)" }
+            ]
+          },
+          age: {
+            centerTitle: "年代",
+            centerSub: "M1-M3 / その他",
+            gradient: "conic-gradient(#2ba8ff 0 24%, #7f75ff 24% 47%, #3de4d8 47% 70%, #ffc36b 70% 100%)",
+            legend: [
+              { name: "M1", value: "24%", color: "#2ba8ff" },
+              { name: "M2", value: "23%", color: "#7f75ff" },
+              { name: "M3", value: "23%", color: "#3de4d8" },
+              { name: "その他", value: "27%", color: "#ffc36b" }
+            ]
+          }
         }
       },
       Lemino: {
@@ -2391,6 +2472,38 @@
       }
     }
 
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatKpiValue(value) {
+      const raw = String(value);
+      if (!/[0-9０-９]/.test(raw)) return escapeHtml(raw);
+      const chars = Array.from(raw);
+      let html = "";
+      let inUnit = false;
+      const numericLike = /[0-9０-９,，.．:：\-ー\/]/;
+      chars.forEach((ch) => {
+        const isNumeric = numericLike.test(ch);
+        if (!isNumeric && !inUnit) {
+          html += `<span class="kpi-unit">`;
+          inUnit = true;
+        }
+        if (isNumeric && inUnit) {
+          html += `</span>`;
+          inUnit = false;
+        }
+        html += escapeHtml(ch);
+      });
+      if (inUnit) html += `</span>`;
+      return html;
+    }
+
     function applyMediaDetail(mediaKey) {
       const selectedMedia = mediaDetails[mediaKey];
       if (!selectedMedia) return;
@@ -2405,12 +2518,23 @@
       detailTitle.textContent = selectedMedia.title;
       detailDescription.textContent = selectedMedia.description;
       detailChip.textContent = selectedMedia.chip;
+      const uiImage = selectedMedia.uiImage || mediaDetails.ABEMA.uiImage;
+      detailUiImage.src = uiImage.src;
+      detailUiImage.alt = uiImage.alt;
+      const uiImageSecondary = selectedMedia.uiImageSecondary;
+      if (uiImageSecondary) {
+        secondaryUiImage.src = uiImageSecondary.src;
+        secondaryUiImage.alt = uiImageSecondary.alt;
+        secondaryUiCapture.style.display = "flex";
+      } else {
+        secondaryUiCapture.style.display = "none";
+      }
 
       selectedMedia.kpis.forEach((item, idx) => {
         const targetCard = kpiCards[idx];
         if (!targetCard) return;
         targetCard.querySelector(".label").textContent = item.label;
-        targetCard.querySelector(".value").textContent = item.value;
+        targetCard.querySelector(".value").innerHTML = formatKpiValue(item.value);
         targetCard.querySelector(".sub").textContent = item.sub;
       });
 
@@ -2484,6 +2608,8 @@
       const dynamicGradient = buildGradientFromLegend(selected.legend, selected.gradient);
       inventoryDonut.style.background = dynamicGradient;
       inventoryCenter.innerHTML = `<strong>${selected.centerTitle}</strong>${selected.centerSub}`;
+      inventoryNote.textContent = selected.note || "";
+      inventoryNote.style.display = selected.note ? "block" : "none";
       inventoryLegend.innerHTML = selected.legend
         .map((item) =>
           `<div class="legend-item"><span class="dot" style="background:${item.color}"></span><span>${item.name}</span><span>${item.value}</span></div>`
